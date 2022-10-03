@@ -1,4 +1,6 @@
 from loops.loop import Loop
+from loops.new_group_loop import NewGroupLoop
+from windows.new_group import NewGroup
 
 class HomeLoop(Loop):
     """The home loop keeps the home window open until it is either
@@ -18,16 +20,24 @@ class HomeLoop(Loop):
         """Checks for events and calls appropriate functions. Also runs
         logic to enable/disable buttons etc."""
 
-        # Events
+        ## Events
+
+        # If add new group button is pressed, open the add new group window
+        if event == "addNewGroup":
+            newGroup = NewGroup()
+            newGroupWindow = newGroup.getWindow()
+            newGroupLoop = NewGroupLoop(newGroupWindow)
+            self._window.close()
+            newGroupLoop.startLoop()
 
         # If delete button is pressed, remove the currently selected
         # group from the list
-        if event == "deleteGroup":
+        elif event == "deleteGroup":
             groupListItems = self._groupList.Values
             groupListItems.remove(self._groupList.get()[0])
             self._groupList.Update(values=groupListItems)
 
-        # Enable/disable elements
+        ## Enable/disable elements
 
         # Enable/disable edit, delete and start call off buttons based
         # on if there are groups in the listbox
