@@ -12,6 +12,7 @@ class HomeLoop(Loop):
         self._editGroup = self._window["editGroup"]
         self._deleteGroup = self._window["deleteGroup"]
         self._startCallOffs = self._window["startCallOffs"]
+        self.buttonsEnabled()
 
     def _listenLoop(self, event, values):
         """Checks for events and calls appropriate functions. Also runs
@@ -30,6 +31,10 @@ class HomeLoop(Loop):
 
         # Enable/disable edit, delete and start call off buttons based
         # on if there are groups in the listbox
+        
+        self.buttonsEnabled()
+
+    def buttonsEnabled(self):
         if self._groupList.Values != []:
             self._editGroup.Update(disabled=False)
             self._deleteGroup.Update(disabled=False)
