@@ -14,9 +14,9 @@ class NewGroup(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self):
+    def __init__(self, title="New Group"):
         "Contruscts the 'New Group' window"
-        self._title = "New Group"
+        self._title = title
         self._layout = [
             [sg.Text("Developer:")],
             [sg.Combo(values=[], size=(30, 1), key="developer")],
@@ -27,7 +27,8 @@ class NewGroup(Window):
             [sg.Listbox(values=[], size=(30, 5), key="plotList")],
             [
                 sg.Push(), sg.Button("Set Plot", key="setPlot"),
-                sg.Button("Delete", key="deletePlot")],
+                sg.Button("Delete", key="deletePlot")
+            ],
             [sg.Text("_"*32)],
             [
                 sg.Push(), sg.Button("Set All", key="setAll"), sg.Button("Cancel", key="cancelGroup"),

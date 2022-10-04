@@ -24,10 +24,28 @@ class Home(Window):
         ]
         super().__init__(self._title, self._layout)
 
-    # def open(self):
-    #     "Opens the home window and runs the event loop"
-    #     while True:
-    #         event, values = self._window.read()
-    #         if event == sg.WIN_CLOSED:
-    #             break
-    #     self._window.close()
+        self._groupList = self._window["groupList"]
+        self._addNewGroup = self._window["addNewGroup"]
+        self._editGroup = self._window["editGroup"]
+        self._deleteGroup = self._window["deleteGroup"]
+        self._startCallOffs = self._window["startCallOffs"]
+
+        self.toggleButtons()
+
+    def toggleButtons(self):
+        """Check if the edit, delete and start buttons should be enabled
+        and set them appropriately"""
+        if self._groupList.Values != []:
+            self._editGroup.Update(disabled=False)
+            self._deleteGroup.Update(disabled=False)
+            self._startCallOffs.Update(disabled=False)
+        else:
+            self._editGroup.Update(disabled=True)
+            self._deleteGroup.Update(disabled=True)
+            self._startCallOffs.Update(disabled=True)
+
+    def deleteGroup(self):
+        "Delete the currently selected group"
+        groupListItems = self._groupList.Values
+        groupListItems.remove(self._groupList.get()[0])
+        self._groupList.Update(values=groupListItems)
