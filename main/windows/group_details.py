@@ -14,14 +14,14 @@ class GroupDetails(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self):
+    def __init__(self, data):
         "Contructs the 'Group Details' window"
         self._title = "Group Details"
         self._layout = [
             [sg.Text("Developer:")],
-            [sg.Combo(values=[], size=(30, 1), key="developer")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="developer")],
             [sg.Text("Site:")],
-            [sg.Combo(values=[], size=(30, 1), key="site")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="site")],
             [sg.Text("Plots:")],
             [sg.In(size=(30, 1), key="plotInput")],
             [sg.Listbox(values=[], size=(30, 5), key="plotList")],
@@ -52,3 +52,20 @@ class GroupDetails(Window):
         self._deleteAll = self._window["deleteAll"]
         self._cancelGroup = self._window["cancelGroup"]
         self._confirmGroup = self._window["confirmGroup"]
+
+        self._data = data
+
+        self._populateDevelopers()
+
+    def _populateDevelopers(self):
+        "Populates the developer options"
+        self._developer.update(values=self._data.getDevelopers())
+
+    def _populateSites(self, developer):
+        "Populates the site options based on the developer"
+        self._site.update(values=self._data.getSites(developer))
+
+    def toggleButtons(self):
+        """Checks if the set, set all, delete, delete all and confirm
+        buttons should be enabled and set appropriately"""
+        

@@ -17,7 +17,6 @@ class Organiser():
         self._openHome()
         self._data = data
         self._running = True
-        self._openPlot("1")
 
     def startProgram(self):
         "Begins a loop to read window events"
@@ -31,11 +30,11 @@ class Organiser():
             if self._currentWindow.Title == "Auto Call Off":
                 self._listenHome(event, values)
 
-            elif self._currentWindow.Title == "Add New Group":
-                self._listenNew(event, values)
+            elif self._currentWindow.Title == "Group Details":
+                self._listenGroup(event, values)
 
             elif self._currentWindow.Title[0:4] == "Plot":
-                self._listenDetails(event, values)
+                self._listenPlot(event, values)
 
             if event == sg.WIN_CLOSED:
                 self._running = False
@@ -49,8 +48,8 @@ class Organiser():
 
     def _openGroup(self):
         "Creates a new instance of GroupDetails and makes that the current window"
-        self._new = GroupDetails()
-        self._currentWindow = self._new.getWindow()
+        self._group = GroupDetails(self._data)
+        self._currentWindow = self._group.getWindow()
     
     def _openPlot(self, plotNumber):
         """Creates a new instance of PlotDetails and makes that the current window
@@ -58,8 +57,8 @@ class Organiser():
         Parameters:
         plotNumber: A string containing the current plot number
         """
-        self._details = PlotDetails(plotNumber)
-        self._currentWindow = self._details.getWindow()
+        self._plot = PlotDetails(plotNumber)
+        self._currentWindow = self._plot.getWindow()
 
     ## Event listening methods
 
@@ -74,15 +73,11 @@ class Organiser():
         # Add a new group
         if event == "addNewGroup":
             self._currentWindow.close()
-            self._openNew()
+            self._openGroup()
 
         elif event == "editGroup":
             ""
             ## Waiting on data to see how this will work ##
-            
-            ## For testing ##
-            self._currentWindow.close()
-            self._openNew()
 
         # Delete the currently selected group
         elif event == "deleteGroup":
@@ -92,21 +87,14 @@ class Organiser():
             ""
             ## Waiting on data to see how this will work ##
 
-            ## For testing ##
-            self._currentWindow.close()
-            self._openDetails("5")
-
-        elif event == sg.WIN_CLOSED:
-            self._running = False
-
         # If the home window is still open, run checks
-        if self._currentWindow.Title == "Auto Call Off" and self._running == True:
+        if self._currentWindow.Title == "Auto Call Off" and event != sg.WIN_CLOSED:
             # Check if the edit, delete and start buttons should be enabled
             # and set them appropriately
             self._home.toggleButtons()
 
-    def _listenNew(self, event, values):
-        """Contains events specific to the new group window, and runs other logic checks
+    def _listenGroup(self, event, values):
+        """Contains events specific to the group details window, and runs other logic checks
         to enable or disable window elements
         
         Attributes:
@@ -114,7 +102,11 @@ class Organiser():
         values: A list of values from self._currentWindow.read()
         """
 
-    def _listenDetails(self, event, values):
+        if event == "developer":
+            self._group._populateSites(values["developer"])
+
+
+    def _listenPlot(self, event, values):
         """Contains events specific to the plot details window, and runs other logic checks
         to enable or disable window elements
         

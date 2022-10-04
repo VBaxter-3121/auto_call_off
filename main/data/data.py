@@ -1,4 +1,4 @@
-# This class will be used to keep track of the data between windows, being passed between them all
+from data.job_details import jobDetails
 
 class Data():
     """This class keeps track of all data that the user inputs to
@@ -8,6 +8,7 @@ class Data():
         "Contructs the data class"
 
         self._data = {}
+        self._jobDetails = jobDetails
 
     def checkConflicts(self, group):
         """Ensures that the user doesn't try to add two groups for the
@@ -25,7 +26,7 @@ class Data():
         # names, just take the first key and take the information from that one
         firstKey = next(iter(group))
         groupName = f"{group[firstKey][0]}, {group[firstKey][1]}"
-        
+
         if groupName not in self._data:
             self._addGroup(groupName, group)
         else:
@@ -52,3 +53,17 @@ class Data():
         key: A string matching one of the keys in the data dictionary
         """
         self._data.pop(key)
+
+    def getDevelopers(self):
+        "Returns the list of developers"
+        developerList = []
+        for name in jobDetails.keys():
+            developerList.append(name)
+        return developerList
+        
+    def getSites(self, developer):
+        "Returns the list of sites pertaining to the developer"
+        siteList = []
+        for name in jobDetails[developer].keys():
+            siteList.append(name)
+        return siteList
