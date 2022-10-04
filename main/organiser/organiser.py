@@ -16,17 +16,15 @@ class Organiser():
         """
         self._openHome()
         self._data = data
+        self._running = True
 
     def startProgram(self):
         "Begins a loop to read window events"
-        while True:
+        while self._running:
             event, values = self._currentWindow.read()
 
             ## For testing ##
             print(event)
-
-            if event == sg.WIN_CLOSED:
-                break
 
             # Run through events specific to each window
             if self._currentWindow.Title == "Auto Call Off":
@@ -37,8 +35,6 @@ class Organiser():
 
             elif self._currentWindow.Title[0:4] == "Plot":
                 self._listenDetails(event, values)
-
-        self._currentWindow.close()
 
     ## Window opening methods
 
@@ -83,9 +79,11 @@ class Organiser():
         elif event == "startCallOffs":
             ""
             ## Waiting on data to see how this will work ##
+        elif event == sg.WIN_CLOSED:
+            self._running = False
 
         # If the home window is still open, run checks
-        if self._currentWindow.Title == "Auto Call Off":
+        if self._currentWindow.Title == "Auto Call Off" and self._running == True:
             # Check if the edit, delete and start buttons should be enabled
             # and set them appropriately
             self._home.toggleButtons()
