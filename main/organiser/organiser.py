@@ -17,6 +17,7 @@ class Organiser():
         self._openHome()
         self._data = data
         self._running = True
+        self._openPlot("1")
 
     def startProgram(self):
         "Begins a loop to read window events"
@@ -46,12 +47,12 @@ class Organiser():
         self._home = Home()
         self._currentWindow = self._home.getWindow()
 
-    def _openNew(self):
-        "Creates a new instance of NewGroup and makes that the current window"
+    def _openGroup(self):
+        "Creates a new instance of GroupDetails and makes that the current window"
         self._new = GroupDetails()
         self._currentWindow = self._new.getWindow()
     
-    def _openDetails(self, plotNumber):
+    def _openPlot(self, plotNumber):
         """Creates a new instance of PlotDetails and makes that the current window
         
         Parameters:
@@ -94,6 +95,9 @@ class Organiser():
             ## For testing ##
             self._currentWindow.close()
             self._openDetails("5")
+
+        elif event == sg.WIN_CLOSED:
+            self._running = False
 
         # If the home window is still open, run checks
         if self._currentWindow.Title == "Auto Call Off" and self._running == True:

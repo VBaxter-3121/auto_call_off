@@ -26,17 +26,17 @@ class GroupDetails(Window):
             [sg.In(size=(30, 1), key="plotInput")],
             [sg.Listbox(values=[], size=(30, 5), key="plotList")],
             [
-                sg.Push(), sg.Button("Set Plot", key="setPlot"),
-                sg.Button("Delete", key="deletePlot")
+                sg.Button("Set Plot", size=(12, 1), key="setPlot"), sg.Push(),
+                sg.Button("Delete", size=(12, 1), key="deletePlot")
             ],
             [
-                sg.Push(), sg.Button("Set All", key="setAllPlots"),
-                sg.Button("Delete All", key="deleteAll")
+                sg.Button("Set All", size=(12, 1), key="setAllPlots"), sg.Push(),
+                sg.Button("Delete All", size=(12, 1), key="deleteAll")
             ],
             [sg.Text("_"*32)],
             [
-                sg.Push(), sg.Button("Cancel", key="cancelGroup"),
-                sg.Button("Confirm", key="confirmGroup")]
+                sg.Button("Cancel", size=(10, 1), key="cancelGroup"), sg.Push(),
+                sg.Button("Confirm", size=(10, 1), key="confirmGroup")]
         ]
 
         super().__init__(self._title, self._layout)

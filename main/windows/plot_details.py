@@ -1,3 +1,4 @@
+from turtle import back
 import PySimpleGUI as sg
 from windows.window import Window
 
@@ -35,7 +36,9 @@ class PlotDetails(Window):
                     [sg.Checkbox("Fix 3                     ", default=False, key="fix3")],
                     [sg.Checkbox("Finals                   ", default=False, key="finals")],
                     [sg.Checkbox("Fix 4                     ", default=False, key="fix4")],
-                    [sg.Button("Clear Selection", key="clearSelection")],
+                    [sg.VPush()],
+                    [sg.VPush()],
+                    [sg.Push(), sg.Button("Clear Selection", size=(15, 1), key="clearSelection"), sg.Push()]
             ]),
             sg.VSeparator(),
             sg.Column([
@@ -43,21 +46,21 @@ class PlotDetails(Window):
                     [
                         sg.In(size=(10, 1), key="date"), sg.CalendarButton("📅",
                         close_when_date_chosen=True, target="date", no_titlebar=False,
-                        format=("%d/%m/%Y"), key="calendar")],
+                        format=("%d/%m/%Y"), size=(3, 1), key="calendar")],
                     [sg.Text("Time:")],
                     [sg.In(size=(10, 1), key="time")],
                     [sg.Text("Notes:")],
                     [sg.In(size=(25, 1), key="notes")],
-                    [sg.Button("Save Details", key="saveDetails")],
-                    [sg.Text("_"*27)],
+                    [sg.Button("Save Details", size=(21, 1), key="saveDetails"), sg.Push()],
+                    [sg.Text("_"*27), sg.Push()],
                     [sg.Listbox(values=[], size=(25, 10), key="detailsList")],
-                    [sg.Push(), sg.Button("Delete", key="deleteDetails"), sg.Button("Edit", key="editDetails")]
+                    [sg.Button("Delete", size=(10, 1), key="deleteDetails"), sg.Push(), sg.Button("Edit", size=(10, 1), key="editDetails")]
             ])
             ],
-            [sg.Text("_"*53)],
+            [sg.Push(), sg.Text("_"*54), sg.Push()],
             [
-                sg.Push(), sg.Button("Clear Details", key="clearPlot"), sg.Button("Cancel",key="cancelPlot"),
-                sg.Button("Confirm", key="confirmPlot")
+                sg.Push(), sg.Button("Clear Details", size=(14, 1), key="clearPlot"), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
+                sg.Button("Confirm", size=(14, 1), key="confirmPlot"), sg.Push()
             ]
         ]
 
@@ -89,6 +92,6 @@ class PlotDetails(Window):
         self._detailsList = self._window["detailsList"]
         self._deleteDetails = self._window["deleteDetails"]
         self._editDetails = self._window["editDetails"]
-        self._clearPlot = self._window["clearDetails"]
+        self._clearPlot = self._window["clearPlot"]
         self._cancelPlot = self._window["cancelPlot"]
         self._confirmPlot = self._window["confirmPlot"]
