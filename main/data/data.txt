@@ -1,0 +1,28 @@
+## For use as a reference ##
+        developer = ""
+        site = ""
+        plotNumber = ""
+        orderNumbers = ""
+        date = ""
+        time = ""
+        manager = ""
+        notes = ""
+        #
+        dataTemplate = {
+            "Group 1": {
+                    "Plot 1": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 2": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 3": [developer, site, plotNumber, orderNumbers, date, time, manager, notes]
+                },
+            "Group 2": {
+                    "Plot 4": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 5": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 6": [developer, site, plotNumber, orderNumbers, date, time, manager, notes]
+                },
+            "Group 3": {
+                    "Plot 7": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 8": [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
+                    "Plot 9": [developer, site, plotNumber, orderNumbers, date, time, manager, notes]
+                }
+        }
+        ## Template End ##

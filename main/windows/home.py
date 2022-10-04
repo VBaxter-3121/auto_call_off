@@ -18,7 +18,7 @@ class Home(Window):
         self._title = "Auto Call Off"
         self._layout = [
             [sg.Text("Groups:")],
-            [sg.Listbox(values=["Testing", "Probando"], size=(41, 10), enable_events=True, key="groupList")],
+            [sg.Listbox(values=[], size=(41, 10), enable_events=True, key="groupList")],
             [sg.Button("Add New Group", key="addNewGroup"), sg.Button("Edit", disabled=True, key="editGroup"),
             sg.Button("Delete", disabled=True, key="deleteGroup"), sg.Button("Start Call Offs", disabled=True, key="startCallOffs")]
         ]
