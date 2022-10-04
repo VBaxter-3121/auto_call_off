@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 
 from windows.home import Home
-from windows.new_group import NewGroup
+from windows.group_details import GroupDetails
 from windows.plot_details import PlotDetails
 
 class Organiser():
@@ -48,7 +48,7 @@ class Organiser():
 
     def _openNew(self):
         "Creates a new instance of NewGroup and makes that the current window"
-        self._new = NewGroup()
+        self._new = GroupDetails()
         self._currentWindow = self._new.getWindow()
     
     def _openDetails(self, plotNumber):

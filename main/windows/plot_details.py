@@ -56,8 +56,8 @@ class PlotDetails(Window):
             ],
             [sg.Text("_"*53)],
             [
-                sg.Push(), sg.Button("Clear Details", key="clearDetails"), sg.Button("Cancel",key="cancelDetails"),
-                sg.Button("Confirm", key="confirmDetails")
+                sg.Push(), sg.Button("Clear Details", key="clearPlot"), sg.Button("Cancel",key="cancelPlot"),
+                sg.Button("Confirm", key="confirmPlot")
             ]
         ]
 
@@ -89,6 +89,6 @@ class PlotDetails(Window):
         self._detailsList = self._window["detailsList"]
         self._deleteDetails = self._window["deleteDetails"]
         self._editDetails = self._window["editDetails"]
-        self._clearDetails = self._window["clearDetails"]
-        self._cancelDetails = self._window["cancelDetails"]
-        self._confirmDetails = self._window["confirmDetails"]
+        self._clearPlot = self._window["clearDetails"]
+        self._cancelPlot = self._window["cancelPlot"]
+        self._confirmPlot = self._window["confirmPlot"]
