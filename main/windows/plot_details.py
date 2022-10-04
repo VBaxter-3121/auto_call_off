@@ -23,19 +23,19 @@ class PlotDetails(Window):
             [
             sg.Column([
                     [sg.Text("Call Off Stages:")],
-                    [sg.Checkbox("Gutter Kit                ", default=False, key="stage1")],
-                    [sg.Checkbox("Downpipe Kit         ", default=False, key="stage2")],
-                    [sg.Checkbox("Gas Kit                 ", default=False, key="stage3")],
-                    [sg.Checkbox("1st Fix Kit             ", default=False, key="stage4")],
-                    [sg.Checkbox("Soils Kit                ", default=False, key="stage5")],
-                    [sg.Checkbox("Shower Tray/Mid Fix", default=False, key="stage6")],
-                    [sg.Checkbox("Heating & Bath       ", default=False, key="stage7")],
-                    [sg.Checkbox("Fix 2                     ", default=False, key="stage8")],
-                    [sg.Checkbox("Sani                      ", default=False, key="stage9")],
-                    [sg.Checkbox("Fix 3                     ", default=False, key="stage10")],
-                    [sg.Checkbox("Finals                   ", default=False, key="stage11")],
-                    [sg.Checkbox("Fix 4                     ", default=False, key="stage12")],
-                    [sg.Push(), sg.Button("Clear Selection", key="clearSelection")],
+                    [sg.Checkbox("Gutter Kit                ", default=False, key="gutter")],
+                    [sg.Checkbox("Downpipe Kit         ", default=False, key="downpipe")],
+                    [sg.Checkbox("Gas Kit                 ", default=False, key="gasKit")],
+                    [sg.Checkbox("1st Fix Kit             ", default=False, key="1stFixKit")],
+                    [sg.Checkbox("Soils Kit                ", default=False, key="soilsKit")],
+                    [sg.Checkbox("Shower Tray/Mid Fix", default=False, key="midFix")],
+                    [sg.Checkbox("Heating & Bath       ", default=False, key="heatingAndBath")],
+                    [sg.Checkbox("Fix 2                     ", default=False, key="fix2")],
+                    [sg.Checkbox("Sani                      ", default=False, key="sani")],
+                    [sg.Checkbox("Fix 3                     ", default=False, key="fix3")],
+                    [sg.Checkbox("Finals                   ", default=False, key="finals")],
+                    [sg.Checkbox("Fix 4                     ", default=False, key="fix4")],
+                    [sg.Button("Clear Selection", key="clearSelection")],
             ]),
             sg.VSeparator(),
             sg.Column([
@@ -48,23 +48,47 @@ class PlotDetails(Window):
                     [sg.In(size=(10, 1), key="time")],
                     [sg.Text("Notes:")],
                     [sg.In(size=(25, 1), key="notes")],
-                    [sg.Push(), sg.Button("Save Details")],
-                    [sg.Listbox(values=[], size=(25, 11), key="savedDetails")],
+                    [sg.Button("Save Details", key="saveDetails")],
+                    [sg.Text("_"*27)],
+                    [sg.Listbox(values=[], size=(25, 10), key="detailsList")],
                     [sg.Push(), sg.Button("Delete", key="deleteDetails"), sg.Button("Edit", key="editDetails")]
             ])
             ],
             [sg.Text("_"*53)],
             [
                 sg.Push(), sg.Button("Clear Details", key="clearDetails"), sg.Button("Cancel",key="cancelDetails"),
-                sg.Button("Save", key="saveDetails")
+                sg.Button("Confirm", key="confirmDetails")
             ]
         ]
+
         super().__init__(self._title, self._layout)
 
-    def open(self):
-        "Opens the home window and runs the event loop"
-        while True:
-            event, values = self._window.read()
-            if event == sg.WIN_CLOSED:
-                break
-        self._window.close()
+        ## Key variables
+
+        # Checkboxes
+        self._gutter = self._window["gutter"]
+        self._downpipe = self._window["downpipe"]
+        self._gasKit = self._window["gasKit"]
+        self._1stFixKit = self._window["1stFixKit"]
+        self._soilsKit = self._window["soilsKit"]
+        self._midFix = self._window["midFix"]
+        self._heatingAndBath = self._window["heatingAndBath"]
+        self._fix2 = self._window["fix2"]
+        self._sani = self._window["sani"]
+        self._fix3 = self._window["fix3"]
+        self._finals = self._window["finals"]
+        self._fix4 = self._window["fix4"]
+
+        # Others
+        self._clearSelection = self._window["clearSelection"]
+        self._date = self._window["date"]
+        self._calendar = self._window["calendar"]
+        self._time = self._window["time"]
+        self._notes = self._window["notes"]
+        self._saveDetails = self._window["saveDetails"]
+        self._detailsList = self._window["detailsList"]
+        self._deleteDetails = self._window["deleteDetails"]
+        self._editDetails = self._window["editDetails"]
+        self._clearDetails = self._window["clearDetails"]
+        self._cancelDetails = self._window["cancelDetails"]
+        self._confirmDetails = self._window["confirmDetails"]

@@ -22,8 +22,10 @@ class Home(Window):
             [sg.Button("Add New Group", key="addNewGroup"), sg.Button("Edit", disabled=True, key="editGroup"),
             sg.Button("Delete", disabled=True, key="deleteGroup"), sg.Button("Start Call Offs", disabled=True, key="startCallOffs")]
         ]
+
         super().__init__(self._title, self._layout)
 
+        ## Key variables
         self._groupList = self._window["groupList"]
         self._addNewGroup = self._window["addNewGroup"]
         self._editGroup = self._window["editGroup"]
@@ -46,6 +48,9 @@ class Home(Window):
 
     def deleteGroup(self):
         "Delete the currently selected group"
-        groupListItems = self._groupList.Values
-        groupListItems.remove(self._groupList.get()[0])
-        self._groupList.Update(values=groupListItems)
+        try:
+            groupListItems = self._groupList.Values
+            groupListItems.remove(self._groupList.get()[0])
+            self._groupList.Update(values=groupListItems)
+        except:
+            pass

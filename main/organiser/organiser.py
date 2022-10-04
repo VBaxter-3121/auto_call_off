@@ -36,6 +36,9 @@ class Organiser():
             elif self._currentWindow.Title[0:4] == "Plot":
                 self._listenDetails(event, values)
 
+            if event == sg.WIN_CLOSED:
+                self._running = False
+
     ## Window opening methods
 
     def _openHome(self):
@@ -48,9 +51,13 @@ class Organiser():
         self._new = NewGroup()
         self._currentWindow = self._new.getWindow()
     
-    def _openDetails(self):
-        "Creates a new instance of PlotDetails and makes that the current window"
-        self._details = PlotDetails()
+    def _openDetails(self, plotNumber):
+        """Creates a new instance of PlotDetails and makes that the current window
+        
+        Parameters:
+        plotNumber: A string containing the current plot number
+        """
+        self._details = PlotDetails(plotNumber)
         self._currentWindow = self._details.getWindow()
 
     ## Event listening methods
@@ -71,6 +78,10 @@ class Organiser():
         elif event == "editGroup":
             ""
             ## Waiting on data to see how this will work ##
+            
+            ## For testing ##
+            self._currentWindow.close()
+            self._openNew()
 
         # Delete the currently selected group
         elif event == "deleteGroup":
@@ -79,8 +90,10 @@ class Organiser():
         elif event == "startCallOffs":
             ""
             ## Waiting on data to see how this will work ##
-        elif event == sg.WIN_CLOSED:
-            self._running = False
+
+            ## For testing ##
+            self._currentWindow.close()
+            self._openDetails("5")
 
         # If the home window is still open, run checks
         if self._currentWindow.Title == "Auto Call Off" and self._running == True:

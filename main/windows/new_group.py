@@ -31,15 +31,19 @@ class NewGroup(Window):
             ],
             [sg.Text("_"*32)],
             [
-                sg.Push(), sg.Button("Set All", key="setAll"), sg.Button("Cancel", key="cancelGroup"),
-                sg.Button("Save", key="saveGroupEdit")]
+                sg.Push(), sg.Button("Set All", key="setAllPlots"), sg.Button("Cancel", key="cancelGroup"),
+                sg.Button("Confirm", key="confirmGroup")]
         ]
+
         super().__init__(self._title, self._layout)
 
-    def open(self):
-        "Opens the home window and runs the event loop"
-        while True:
-            event, values = self._window.read()
-            if event == sg.WIN_CLOSED:
-                break
-        self._window.close()
+        ## Key variables
+        self._developer = self._window["developer"]
+        self._site = self._window["site"]
+        self._plotInput = self._window["plotInput"]
+        self._plotList = self._window["plotList"]
+        self._setPlot = self._window["setPlot"]
+        self._deletePlot = self._window["deletePlot"]
+        self._setAllPlots = self._window["setAllPlots"]
+        self._cancelGroup = self._window["cancelGroup"]
+        self._confirmGroup = self._window["confirmGroup"]
