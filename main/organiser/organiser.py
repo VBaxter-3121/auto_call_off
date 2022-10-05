@@ -124,6 +124,11 @@ class Organiser():
             # Will need to add code to clear any dictionaries in progress
             # for this group
 
+        elif event == "submitGroup":
+            self._data.checkConflicts(self._group.getGroupDict())
+
+            self._currentWindow.close()
+
         # If the group window is still open, run checks
         if self._currentWindow.Title == "Group Details" and event != sg.WIN_CLOSED and event != "cancelGroup":
             self._group.toggleButtons()

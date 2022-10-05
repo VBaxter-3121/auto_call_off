@@ -56,6 +56,7 @@ class GroupDetails(Window):
         ## Other
         self._data = data
         self._plotListItems = []
+        self._plotInfo = []
 
         self._populateDevelopers()
         self._plotInput.bind("<Return>", "-")
@@ -95,7 +96,7 @@ class GroupDetails(Window):
     def setPlot(self):
         "Sets the details for the selected plot"
         
-        
+
     def deletePlot(self):
         "Deletes the selected plot"
         try:
