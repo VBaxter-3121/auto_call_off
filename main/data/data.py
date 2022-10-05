@@ -83,3 +83,30 @@ class Data():
             siteList.append(name)
         return siteList
     ##########
+
+    def addPlot(self, plotInfo):
+        """Adds a key to currentGroupDict for a given plot
+        
+        Parameters:
+        plotInfo: A list containing all user input information for the plot
+        """
+        plot = plotInfo[2]
+        self._currentGroupDict[f"Plot {plot}"] = plotInfo
+    ##########
+
+    def addGroup(self):
+        """Adds a complete group dictionary to allGroupsDict. If there already
+        exists a key for the given developer/site combo, it will attempt to
+        merge the two dictionaries"""
+
+        ## See if this is correct ##
+        developer = next(iter(self._currentGroupDict))[0]
+        site = next(iter(self._currentGroupDict))[1]
+    ##########
+
+    def getGroupDetails(self, group):
+        """Returns the developer, site and list of plots from a given group
+        
+        Parameters:
+        group: A string matching a key from allGroupsDict
+        """

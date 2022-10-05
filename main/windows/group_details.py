@@ -14,17 +14,17 @@ class GroupDetails(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, data):
+    def __init__(self, data, preFill=[[None, None], []]):
         "Contructs the 'Group Details' window"
         self._title = "Group Details"
         self._layout = [
             [sg.Text("Developer:")],
-            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="developer")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, default_value=preFill[0][0], key="developer")],
             [sg.Text("Site:")],
-            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="site")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, default_value=preFill[0][1], key="site")],
             [sg.Text("Plots:")],
             [sg.In(size=(30, 1), enable_events=True, key="plotInput")],
-            [sg.Listbox(values=[], size=(30, 5), key="plotList")],
+            [sg.Listbox(values=preFill[1], size=(30, 5), key="plotList")],
             [
                 sg.Button("Set Plot", size=(12, 1), disabled=True, key="setPlot"), sg.Push(),
                 sg.Button("Delete", size=(12, 1), disabled=True, key="deletePlot")

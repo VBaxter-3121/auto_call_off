@@ -60,3 +60,10 @@ class Home(Window):
         except:
             pass
     ##########
+
+    def getSelectedGroup(self):
+        "Returns the currently selected group"
+        try:
+            return self._groupList.get()[0]
+        except:
+            pass

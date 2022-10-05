@@ -43,9 +43,13 @@ class Organiser():
         self._homeWindow = self._home.getWindow()
     ##########
 
-    def _openGroup(self):
+    def _openGroup(self, edit=False, group=""):
         "Creates a new instance of GroupDetails"
-        self._group = GroupDetails(self._data)
+        if edit == True:
+            preFill = self._data.getGroupDetails(group)
+            self._group = GroupDetails(self._data, preFill)
+        else:
+            self._group = GroupDetails(self._data)
         self._groupWindow = self._group.getWindow()
         self._homeWindow.disable()
         while True:
@@ -99,7 +103,9 @@ class Organiser():
 
         elif event == "editGroup":
             ""
-            ## Waiting on data to see how this will work ##
+            group = self._home.getSelectedGroup()
+            if group != None:
+                self._openGroup(True, group)
 
         # Delete the currently selected group
         elif event == "deleteGroup":
