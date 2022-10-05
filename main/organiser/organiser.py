@@ -1,3 +1,5 @@
+from locale import delocalize
+from winreg import DeleteValue
 import PySimpleGUI as sg
 
 from windows.home import Home
@@ -89,8 +91,6 @@ class Organiser():
 
         # If the home window is still open, run checks
         if self._currentWindow.Title == "Auto Call Off" and event != sg.WIN_CLOSED:
-            # Check if the edit, delete and start buttons should be enabled
-            # and set them appropriately
             self._home.toggleButtons()
 
     def _listenGroup(self, event, values):
@@ -103,7 +103,22 @@ class Organiser():
         """
 
         if event == "developer":
-            self._group._populateSites(values["developer"])
+            self._group.populateSites(values["developer"])
+
+        elif event == "plotInput-":
+            self._group.addPlot(values["plotInput"])
+
+        elif event == "deletePlot":
+            self._group.deletePlot()
+
+        elif event == "deleteAll":
+            self._group.deleteAll()
+
+        
+
+        # If the group window is still open, run checks
+        if self._currentWindow.Title == "Group Details" and event != sg.WIN_CLOSED:
+            self._group.toggleButtons()
 
 
     def _listenPlot(self, event, values):
