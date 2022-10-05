@@ -39,7 +39,12 @@ class Organiser():
                 self._listenPlot(event, values)
 
             if event == sg.WIN_CLOSED:
-                self._running = False
+                if self._currentWindow.Title == "Auto Call Off":
+                    self._running = False
+                elif self._currentWindow.Title == "Group Details":
+                    self._openHome()
+                elif self._currentWindow.Title[0:4] == "Plot":
+                    self._openGroup()
 
     ## Window opening methods
 
@@ -114,10 +119,13 @@ class Organiser():
         elif event == "deleteAll":
             self._group.deleteAll()
 
-        
+        elif event == "cancelGroup":
+            self._currentWindow.close()
+            # Will need to add code to clear any dictionaries in progress
+            # for this group
 
         # If the group window is still open, run checks
-        if self._currentWindow.Title == "Group Details" and event != sg.WIN_CLOSED:
+        if self._currentWindow.Title == "Group Details" and event != sg.WIN_CLOSED and event != "cancelGroup":
             self._group.toggleButtons()
 
 

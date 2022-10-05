@@ -8,7 +8,6 @@ class Data():
         "Contructs the data class"
 
         self._data = {}
-        self._newGroup = {}
         self._jobDetails = jobDetails
 
     def checkConflicts(self, group):
