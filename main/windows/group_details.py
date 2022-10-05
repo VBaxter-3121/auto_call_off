@@ -40,6 +40,7 @@ class GroupDetails(Window):
         ]
 
         super().__init__(self._title, self._layout)
+        self._window.DisableClose=True
 
         ## Key variables
         self._developer = self._window["developer"]
@@ -56,7 +57,6 @@ class GroupDetails(Window):
         ## Other
         self._data = data
         self._plotListItems = []
-        self._plotInfo = []
 
         self._populateDevelopers()
         self._plotInput.bind("<Return>", "-")
@@ -88,4 +88,12 @@ class GroupDetails(Window):
             self._deleteAll.Update(disabled=True)
 
         # Confirm button code
+    ##########
+
+    def addPlot(self):
+        """Adds the number in the plot input to the plot list, and
+        clears the input box"""
+        self._plotList.Values.append(self._plotInput.get())
+        self._plotList.update(self._plotList.Values)
+        self._plotInput.Update("")
     ##########

@@ -129,6 +129,19 @@ class Organiser():
 
         if event == "developer":
             self._group.populateSites(values["developer"])
+
+        elif event == "plotInput-":
+            self._group.addPlot()
+
+        elif event == "setPlot":
+            self._openPlot("1")
+
+        elif event == "cancelGroup":
+            self._groupWindow.close()
+            self._homeWindow.BringToFront()
+
+        if event != sg.WIN_CLOSED and event != "cancelGroup":
+            self._group.toggleButtons()
     ##########
 
     def _listenPlot(self, event, values):
