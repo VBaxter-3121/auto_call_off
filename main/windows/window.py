@@ -14,7 +14,9 @@ class Window:
         self._title = title
         self._layout = layout
         self._window = sg.Window(self._title, self._layout, finalize=True)
+    ##########
 
     def getWindow(self):
         "Returns the window attribute"
         return self._window
+    ##########

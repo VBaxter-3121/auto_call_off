@@ -36,6 +36,7 @@ class Home(Window):
         self._startCallOffs = self._window["startCallOffs"]
 
         self.toggleButtons()
+    ##########
 
     def toggleButtons(self):
         """Check if the edit, delete and start buttons should be enabled
@@ -48,6 +49,7 @@ class Home(Window):
             self._editGroup.Update(disabled=True)
             self._deleteGroup.Update(disabled=True)
             self._startCallOffs.Update(disabled=True)
+    ##########
 
     def deleteGroup(self):
         "Delete the currently selected group"
@@ -57,3 +59,4 @@ class Home(Window):
             self._groupList.Update(values=groupListItems)
         except:
             pass
+    ##########

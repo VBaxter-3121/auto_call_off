@@ -60,14 +60,17 @@ class GroupDetails(Window):
 
         self._populateDevelopers()
         self._plotInput.bind("<Return>", "-")
+    ##########
 
     def _populateDevelopers(self):
         "Populates the developer options"
         self._developer.update(values=self._data.getDevelopers())
+    ##########
 
     def populateSites(self, developer):
         "Populates the site options based on the developer"
         self._site.update(values=self._data.getSites(developer))
+    ##########
 
     def toggleButtons(self):
         """Checks if the set, set all, delete, delete all and confirm
@@ -84,33 +87,5 @@ class GroupDetails(Window):
             self._setAll.Update(disabled=True)
             self._deleteAll.Update(disabled=True)
 
-        # Confirm button
-        
-    def addPlot(self, plot):
-        """Adds the number in the plot input to the plot list, and
-        clears the input box"""
-        self._plotListItems.append(plot)
-        self._plotList.Update(values=self._plotListItems)
-        self._plotInput.Update("")
-
-    def setPlot(self):
-        "Sets the details for the selected plot"
-        
-
-    def deletePlot(self):
-        "Deletes the selected plot"
-        try:
-            plot = self._plotList.get()[0]
-            self._plotListItems.remove(plot)
-            self._plotList.Update(values=self._plotListItems)
-        except:
-            pass
-
-    def setAll(self):
-        "Sets the details for all plots in order from beginning to end"
-
-
-    def deleteAll(self):
-        "Deletes all plots in list"
-        self._plotListItems = []
-        self._plotList.Update(values=self._plotListItems)
+        # Confirm button code
+    ##########

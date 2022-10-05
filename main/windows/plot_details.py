@@ -95,3 +95,4 @@ class PlotDetails(Window):
         self._clearPlot = self._window["clearPlot"]
         self._cancelPlot = self._window["cancelPlot"]
         self._confirmPlot = self._window["confirmPlot"]
+    ##########

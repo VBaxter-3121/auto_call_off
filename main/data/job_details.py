@@ -63,8 +63,8 @@ jobDetails = {
 "Boorley Green Phase B6": ["352-", "Ben Adams"],
 "White House Farm Phase 2B": ["351-", "Ben Adams"],
 "White House Farm Phase 3C": ["354-", "Ben Gough"],
-"White House Farm Phase 5G": ["357-", "Unknown"],
-"White House Farm Phase 6I": ["358-", "Unknown"],
+"White House Farm Phase 5G": ["357-", "Ben Gough"],
+"White House Farm Phase 6I": ["358-", "Ben Gough"],
 "Whiteley": ["353-", "Ben Adams"]
 },
 "McCarthy & Stone": {
@@ -74,7 +74,7 @@ jobDetails = {
 "Huxley Court": ["6010-", "Steve Jordan"]
 },
 "Redrow": {
-"Harbour Views": ["7013-", "Unknown"],
+"Harbour Views": ["7013-", "Chris Matthews"],
 "Hop Field Place Phase 3": ["7008-", "Chris Matthews"],
 "New Fields": ["7011-", "Chris Matthews"],
 "Orchids Place": ["7007-", "Chris Matthews"],
