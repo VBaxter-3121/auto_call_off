@@ -160,6 +160,7 @@ class Organiser():
             self._group.deleteAll()
             self._groupWindow.close()
 
+        # See if you can add this as a function in GroupDetails
         elif event =="confirmGroup":
             carryOn = ""
             for plot in values["plotList"]:
@@ -201,5 +202,24 @@ class Organiser():
         elif event == "deleteDetails":
             self._plot.deleteDetails()
 
-        # Next, edit button
+        elif event == "editDetails":
+            self._plot.clearSelection()
+            self._plot.editDetails()
+
+        elif event == "clearDetails":
+            self._plot.clearSelection()
+            self._plot.clearDetails()
+
+        elif event == "cancelPlot":
+            self._plotWindow.close()
+
+        elif event == "confirmPlot":
+            detailsList = self._plot.confirmDetails()
+            plot = detailsList[0][2]
+            self._group.markPlot(plot)
+            counter = 0
+            for details in detailsList:
+                self._data.addPlot(details, counter)
+                counter += 1
+            self._plotWindow.close()
     ##########

@@ -88,17 +88,15 @@ class Data():
         return siteList
     ##########
 
-    def addPlot(self, plotInfo):
+    def addPlot(self, plotInfo, counter):
         """Adds a key to currentGroupDict for a given plot
         
         Parameters:
         plotInfo: A list containing all user input information for the plot
         """
-        plot = plotInfo[2]
-        # Remove the -number from the end of the plot number inside the list
-        plotInfo[2] = plotInfo[2][0:-2]
+        plotKey = plotInfo[2] + f"-{counter}"
         # Get the contracts manager and insert it into position 6
-        self._currentGroupDict[f"Plot {plot}"] = plotInfo
+        self._currentGroupDict[f"Plot {plotKey}"] = plotInfo
     ##########
 
     # def addGroup(self):

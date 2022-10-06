@@ -1,3 +1,4 @@
+from optparse import Values
 import PySimpleGUI as sg
 from windows.window import Window
 
@@ -107,9 +108,12 @@ class GroupDetails(Window):
     def addPlot(self):
         """Adds the number in the plot input to the plot list, and
         clears the input box"""
-        self._plotList.Values.append(self._plotInput.get())
-        self._plotList.Update(self._plotList.Values)
-        self._plotInput.Update("")
+        try:
+            self._plotList.Values.append(self._plotInput.get())
+            self._plotList.Update(self._plotList.Values)
+            self._plotInput.Update("")
+        except:
+            pass
     ##########
 
     def markPlot(self, plot):
@@ -117,6 +121,8 @@ class GroupDetails(Window):
         for item in self._plotList.Values:
             if item == plot:
                 item = item + " *"
+            self._plotList.Update(self._plotList.Values)
+            # Probably need to update values with item
     ##########
 
     def deletePlot(self):
@@ -154,3 +160,5 @@ class GroupDetails(Window):
                 plotListReturn.append(plot)
         
         return plotListReturn
+    ##########
+

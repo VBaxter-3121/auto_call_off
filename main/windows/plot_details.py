@@ -121,6 +121,7 @@ class PlotDetails(Window):
         "Sets all checkboxes to empty"
         for checkbox in self._checkboxes:
             checkbox.update(False)
+    ##########
 
     def saveDetails(self):
         """Saves details to detailsListTechnical, and displays
@@ -143,7 +144,7 @@ class PlotDetails(Window):
         
         self._detailsList.Update(values=self._allDetails.keys())
         print(self._allDetails)
-        
+    ##########
 
     def deleteDetails(self):
         "Deletes the currently selected key from allDetails"
@@ -152,3 +153,34 @@ class PlotDetails(Window):
             self._detailsList.Update(values=self._allDetails.keys())
         except:
             pass
+    ###########
+
+    def editDetails(self):
+        "Brings up the information for the selected details for editing"
+        try:
+            editList = self._allDetails[self._detailsList.get()[0]]
+            self._date.Update(editList[4])
+            self._time.Update(editList[5])
+            self._notes.Update(editList[7])
+            counter = 0
+            for stage in self._stages:
+                if stage in editList[3]:
+                    self._checkboxes[counter].Update(True)
+                counter += 1
+        except:
+            pass
+    ##########
+
+    def clearDetails(self):
+        "Empties the date, time and notes sections"
+        self._date.Update("")
+        self._time.Update("")
+        self._notes.Update("")
+    ##########
+
+    def confirmDetails(self):
+        "Adds all details to Data.currentGroupDict"
+        returnList = []
+        for key in self._allDetails:
+            returnList.append(self._allDetails[key])
+        return returnList
