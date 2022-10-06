@@ -61,17 +61,18 @@ class Organiser():
             self._listenGroup(event, values)
 
             if event == sg.WIN_CLOSED:
+                self._homeWindow.bring_to_front()
                 break
         self._homeWindow.enable()
     ##########
     
-    def _openPlot(self, plotNumber):
+    def _openPlot(self, developer, site, plot):
         """Creates a new instance of PlotDetails
         
         Parameters:
-        plotNumber: A string containing the current plot number
+        plot: A string containing the current plot number
         """
-        self._plot = PlotDetails(plotNumber)
+        self._plot = PlotDetails(developer, site, plot)
         self._plotWindow = self._plot.getWindow()
         self._groupWindow.disable()
         while True:
@@ -83,8 +84,10 @@ class Organiser():
             self._listenPlot(event, values)
 
             if event == sg.WIN_CLOSED:
+                self._homeWindow.bring_to_front()
+                self._groupWindow.bring_to_front()
                 break
-        self._groupWindow.enable
+        self._groupWindow.enable()
     ##########
 
     ########## Listening Methods ##########
@@ -101,6 +104,7 @@ class Organiser():
         if event == "addNewGroup":
             self._openGroup()
 
+        # Edit an existing group
         elif event == "editGroup":
             ""
             group = self._home.getSelectedGroup()
@@ -111,9 +115,10 @@ class Organiser():
         elif event == "deleteGroup":
             self._home.deleteGroup()
 
+        # Pass user input to call off functions
         elif event == "startCallOffs":
             ""
-            ## Waiting on data to see how this will work ##
+
         if event != sg.WIN_CLOSED:
             self._home.toggleButtons()
     ##########
@@ -129,19 +134,49 @@ class Organiser():
 
         if event == "developer":
             self._group.populateSites(values["developer"])
+            values["site"] = ""
 
         elif event == "plotInput-":
             self._group.addPlot()
 
         elif event == "setPlot":
-            self._openPlot("1")
+            try:
+                selectedPlot = self._group.getSelectedPlot()
+                self._openPlot(values["developer"], values["site"], selectedPlot)
+            except:
+                pass
+
+        elif event == "setAll":
+            for plot in self._group.getPlotList():
+                self._openPlot(values["developer"], values["site"], plot)
+
+        elif event == "deletePlot":
+            self._group.deletePlot()
+
+        elif event == "deleteAll":
+            self._group.deleteAll()
 
         elif event == "cancelGroup":
+            self._group.deleteAll()
             self._groupWindow.close()
-            self._homeWindow.BringToFront()
+
+        elif event =="confirmGroup":
+            carryOn = ""
+            for plot in values["plotList"]:
+                if plot[-1:] != "*":
+                    # Make this a popup window
+                    print("You have not yet confirmed all plots, do you wish to continue?")
+                    carryOn = input()
+                    break
+            if carryOn == "n":
+                pass
+            elif carryOn == "" or carryOn == "y":
+                add = self._data.checkConflicts()
+                if add == True:
+                    self._groupWindow.close()
 
         if event != sg.WIN_CLOSED and event != "cancelGroup":
-            self._group.toggleButtons()
+            self._group.toggleButtons(values["developer"], values["site"])
     ##########
 
     def _listenPlot(self, event, values):
@@ -152,4 +187,13 @@ class Organiser():
         event: An event from self._plotWindow.read()
         values: A list of values from self._plotWindow.read()
         """
+
+        if event == "clearSelection":
+            self._plot.clearSelection()
+
+        elif event =="saveDetails":
+            self._plot.saveDetails()
+        
+        elif event == "cancelPlot":
+            self._plotWindow.close()
     ##########

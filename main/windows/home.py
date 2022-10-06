@@ -39,7 +39,7 @@ class Home(Window):
     ##########
 
     def toggleButtons(self):
-        """Check if the edit, delete and start buttons should be enabled
+        """Checks if the edit, delete and start buttons should be enabled
         and set them appropriately"""
         if self._groupList.Values != []:
             self._editGroup.Update(disabled=False)
@@ -52,7 +52,7 @@ class Home(Window):
     ##########
 
     def deleteGroup(self):
-        "Delete the currently selected group"
+        "Deletes the currently selected group"
         try:
             groupListItems = self._groupList.Values
             groupListItems.remove(self._groupList.get()[0])
@@ -67,3 +67,4 @@ class Home(Window):
             return self._groupList.get()[0]
         except:
             pass
+    ##########

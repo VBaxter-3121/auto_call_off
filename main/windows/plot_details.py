@@ -1,5 +1,6 @@
 from turtle import back
 import PySimpleGUI as sg
+from numpy import safe_eval
 from windows.window import Window
 
 class PlotDetails(Window):
@@ -18,7 +19,7 @@ class PlotDetails(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, plot):
+    def __init__(self, developer, site, plot):
         self._title = f"Plot {plot} Details"
         self._layout = [
             [
@@ -59,12 +60,13 @@ class PlotDetails(Window):
             ],
             [sg.Push(), sg.Text("_"*54), sg.Push()],
             [
-                sg.Push(), sg.Button("Clear Details", size=(14, 1), key="clearPlot"), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
+                sg.Push(), sg.Button("Clear Details", size=(14, 1), key="clearDetails"), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
                 sg.Button("Confirm", size=(14, 1), key="confirmPlot"), sg.Push()
             ]
         ]
 
         super().__init__(self._title, self._layout)
+        self._window.DisableClose=True
 
         ## Key variables
 
@@ -92,7 +94,53 @@ class PlotDetails(Window):
         self._detailsList = self._window["detailsList"]
         self._deleteDetails = self._window["deleteDetails"]
         self._editDetails = self._window["editDetails"]
-        self._clearPlot = self._window["clearPlot"]
+        self._clearDetails = self._window["clearDetails"]
         self._cancelPlot = self._window["cancelPlot"]
         self._confirmPlot = self._window["confirmPlot"]
+
+        self._checkboxes = [
+            self._gutter, self._downpipe,
+            self._gasKit, self._1stFixKit, self._soilsKit,
+            self._midFix, self._heatingAndBath, self._fix2,
+            self._sani, self._fix3, self._finals, self._fix4
+        ]
+
+        self._developer = developer
+        self._site = site
+        self._plot = plot
+        self._allDetails = {}
+
+        self._stages = [
+            "GUTTER KIT", "DOWNPIPE KIT", "GAS KIT",
+            "1ST FIX KIT", "SOILS KIT", "MID FIX", "HEATING & BATH",
+            "FIX 2", "SANI", "FIX 3", "FINALS", "FIX 4"
+        ]
     ##########
+
+    def clearSelection(self):
+        "Sets all checkboxes to empty"
+        for checkbox in self._checkboxes:
+            checkbox.update(False)
+
+    def saveDetails(self):
+        """Saves details to detailsListTechnical, and displays
+        call off stages in detailsList. Sets all checkboxes to
+        empty but leaves date, time and notes untouched"""
+        stages = []
+        counter = 0
+        for checkbox in self._checkboxes:
+            if checkbox.get() == True:
+                stages.append(self._stages[counter])
+            counter += 1
+        if len(stages) > 1:
+            self._allDetails[f"{stages[0]} etc."] = [self._developer,
+            self._site, self._plot, stages,
+            self._date.get(), self._time.get(), "", self._notes.get()]
+        else:
+            self._allDetails[f"{stages[0]}"] = [self._developer,
+            self._site, self._plot, stages, self._date.get(),
+            self._time.get(), "", self._notes.get()]
+        
+        self._detailsList.Update(values=self._allDetails.keys())
+        print(self._allDetails)
+        self.clearSelection()

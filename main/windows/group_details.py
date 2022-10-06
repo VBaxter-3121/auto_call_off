@@ -72,11 +72,13 @@ class GroupDetails(Window):
         self._site.update(values=self._data.getSites(developer))
     ##########
 
-    def toggleButtons(self):
+    def toggleButtons(self, developer, site):
         """Checks if the set, set all, delete, delete all and confirm
         buttons should be enabled and set appropriately"""
         # Set, delete, set all and delete all buttons
-        if self._plotList.Values != []:
+        if self._plotList.Values != [] and developer != "" and site != "":
+            print(developer)
+            print(site)
             self._setPlot.Update(disabled=False)
             self._deletePlot.Update(disabled=False)
             self._setAll.Update(disabled=False)
@@ -87,13 +89,68 @@ class GroupDetails(Window):
             self._setAll.Update(disabled=True)
             self._deleteAll.Update(disabled=True)
 
-        # Confirm button code
+        # Confirm button
+        self._plotsConfirmed = 0
+        self._plotsNotConfirmed = 0
+        for item in self._plotList.Values:
+            if item[-1] == "*":
+                self._plotsConfirmed += 1
+            else:
+                self._plotsNotConfirmed += 1
+
+        if self._plotsConfirmed > 0:
+            self._confirmGroup.Update(disabled=False)
+        else:
+            self._confirmGroup.Update(disabled=True)
     ##########
 
     def addPlot(self):
         """Adds the number in the plot input to the plot list, and
         clears the input box"""
         self._plotList.Values.append(self._plotInput.get())
-        self._plotList.update(self._plotList.Values)
+        self._plotList.Update(self._plotList.Values)
         self._plotInput.Update("")
     ##########
+
+    def markPlot(self, plot):
+        "Adds a marker next to a plot on the list that has been confirmed"
+        for item in self._plotList.Values:
+            if item == plot:
+                item = item + " *"
+    ##########
+
+    def deletePlot(self):
+        "Deletes the currently selected plot"
+        try:
+            plotListItems = self._plotList.Values
+            plotListItems.remove(self._plotList.get()[0])
+            self._plotList.Update(values=plotListItems)
+            self._data.deleteFromCurrent([self._plotList.get()[0]])
+        except:
+            pass
+    ##########
+
+    def deleteAll(self):
+        "Deletes all plots"
+        self._plotList.Update(values=[])
+        self._data.deleteFromCurrent(self._plotList.Values)
+    ##########
+
+    def getSelectedPlot(self):
+        "Returns selected plot"
+        plot = self._plotList.get()[0]
+        if plot[-1:] == "*":
+            plot = plot[0:-2]
+        return plot
+    ##########
+
+    def getPlotList(self):
+        "Returns a list of all plots"
+        plotListReturn = []
+        for plot in self._plotList.Values:
+            if plot[-1:] == "*":
+                plotListReturn.append(plot[0:-2])
+            else:
+                plotListReturn.append(plot)
+        
+        return plotListReturn

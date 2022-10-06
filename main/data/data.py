@@ -9,7 +9,7 @@ class Data():
 
         self._allGroupsDict = {}
         # currentGroupDict will be reset at the start of making a new group.
-        # It will have a key added to it every time a plot is set
+        # It will have a key added to it every time a plot is confirmed.
         self._currentGroupDict = {}
         self._jobDetails = jobDetails
     ##########
@@ -20,37 +20,41 @@ class Data():
         Parameters:
         group: A dictionary of the following format:
         group = {
-            Plot x: [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
-            Plot y: [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
-            Plot z: [developer, site, plotNumber, orderNumbers, date, time, manager, notes]
+            Plot x: [developer, site, plotNumber, [callOffStages], date, time, manager, notes],
+            Plot y: [developer, site, plotNumber, [callOffStages], date, time, manager, notes],
+            Plot z: [developer, site, plotNumber, [callOffStages], date, time, manager, notes]
         }
+        orderNumbers will later replace callOffStages
         """
         self._allGroupsDict[groupName] = group
         ## For testing ##
         print(self._allGroupsDict)
     ##########
 
-    def checkConflicts(self, group):
+    def checkConflicts(self):
         """Ensures that the user doesn't try to add two groups for the
         same site. If they do, see if the data can be merged.
         
         Parameters:
         group: A dictionary of the following format:
         group = {
-            Plot x: [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
-            Plot y: [developer, site, plotNumber, orderNumbers, date, time, manager, notes],
-            Plot z: [developer, site, plotNumber, orderNumbers, date, time, manager, notes]
+            Plot x: [developer, site, plotNumber, [callOffStages], date, time, manager, notes],
+            Plot y: [developer, site, plotNumber, [callOffStages], date, time, manager, notes],
+            Plot z: [developer, site, plotNumber, [callOffStages], date, time, manager, notes]
         }
+        orderNumbers will later replace callOffStages
         """
         # As all entries in any group will have the same developer and site
         # names, just take the first key and take the information from that one
-        firstKey = next(iter(group))
-        groupName = f"{group[firstKey][0]}, {group[firstKey][1]}"
+        firstKey = next(iter(self._currentGroupDict))
+        groupName = f"{self._currentGroupDict[firstKey][0]}, {self._currentGroupDict[firstKey][1]}"
 
         if groupName not in self._allGroupsDict:
-            self._addGroup(groupName, group)
+            self._addGroup(groupName, self._currentGroupDict)
+            self._currentGroupDict = {}
+            return True
         else:
-            ""
+            return False
             # Here code for merging will be added
     ##########
 
@@ -91,18 +95,21 @@ class Data():
         plotInfo: A list containing all user input information for the plot
         """
         plot = plotInfo[2]
+        # Remove the -number from the end of the plot number inside the list
+        plotInfo[2] = plotInfo[2][0:-2]
+        # Get the contracts manager and insert it into position 6
         self._currentGroupDict[f"Plot {plot}"] = plotInfo
     ##########
 
-    def addGroup(self):
-        """Adds a complete group dictionary to allGroupsDict. If there already
-        exists a key for the given developer/site combo, it will attempt to
-        merge the two dictionaries"""
+    # def addGroup(self):
+    #     """Adds a complete group dictionary to allGroupsDict. If there already
+    #     exists a key for the given developer/site combo, it will attempt to
+    #     merge the two dictionaries"""
 
-        ## See if this is correct ##
-        developer = next(iter(self._currentGroupDict))[0]
-        site = next(iter(self._currentGroupDict))[1]
-    ##########
+    #     ## See if this is correct ##
+    #     developer = next(iter(self._currentGroupDict))[0]
+    #     site = next(iter(self._currentGroupDict))[1]
+    # ##########
 
     def getGroupDetails(self, group):
         """Returns the developer, site and list of plots from a given group
@@ -110,3 +117,16 @@ class Data():
         Parameters:
         group: A string matching a key from allGroupsDict
         """
+    ##########
+
+    def deleteFromCurrent(self, plots):
+        """Deletes specified keys from currentGroupDict
+        
+        Parameters:
+        plots: A list of plot numbers
+        """
+        for plot in plots:
+            for key in self._currentGroupDict:
+                if f"Plot {plot}-" in key:
+                    self._currentGroupDict.pop(key)
+    ##########
