@@ -143,4 +143,12 @@ class PlotDetails(Window):
         
         self._detailsList.Update(values=self._allDetails.keys())
         print(self._allDetails)
-        self.clearSelection()
+        
+
+    def deleteDetails(self):
+        "Deletes the currently selected key from allDetails"
+        try:
+            self._allDetails.pop(self._detailsList.get()[0])
+            self._detailsList.Update(values=self._allDetails.keys())
+        except:
+            pass

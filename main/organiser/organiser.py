@@ -193,7 +193,13 @@ class Organiser():
 
         elif event =="saveDetails":
             self._plot.saveDetails()
+            self._plot.clearSelection()
         
         elif event == "cancelPlot":
             self._plotWindow.close()
+
+        elif event == "deleteDetails":
+            self._plot.deleteDetails()
+
+        # Next, edit button
     ##########
