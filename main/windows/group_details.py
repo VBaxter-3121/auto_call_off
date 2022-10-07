@@ -15,17 +15,17 @@ class GroupDetails(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, data, preFill=[[None, None], []]):
+    def __init__(self, data):
         "Contructs the 'Group Details' window"
         self._title = "Group Details"
         self._layout = [
             [sg.Text("Developer:")],
-            [sg.Combo(values=[], size=(30, 1), enable_events=True, default_value=preFill[0][0], key="developer")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="developer")],
             [sg.Text("Site:")],
-            [sg.Combo(values=[], size=(30, 1), enable_events=True, default_value=preFill[0][1], key="site")],
+            [sg.Combo(values=[], size=(30, 1), enable_events=True, key="site")],
             [sg.Text("Plots:")],
             [sg.In(size=(30, 1), enable_events=True, key="plotInput")],
-            [sg.Listbox(values=preFill[1], size=(30, 5), key="plotList")],
+            [sg.Listbox(values=[], size=(30, 5), key="plotList")],
             [
                 sg.Button("Set Plot", size=(12, 1), disabled=True, key="setPlot"), sg.Push(),
                 sg.Button("Delete", size=(12, 1), disabled=True, key="deletePlot")
@@ -75,7 +75,7 @@ class GroupDetails(Window):
 
     def toggleButtons(self, developer, site):
         """Checks if the set, set all, delete, delete all and confirm
-        buttons should be enabled and set appropriately"""
+        buttons should be enabled and sets appropriately"""
         # Set, delete, set all and delete all buttons
         if self._plotList.Values != [] and developer != "" and site != "":
             print(developer)
@@ -84,45 +84,42 @@ class GroupDetails(Window):
             self._deletePlot.Update(disabled=False)
             self._setAll.Update(disabled=False)
             self._deleteAll.Update(disabled=False)
+            self._plotsConfirmed = 0
+            self._plotsNotConfirmed = 0
+            for item in self._plotList.Values:
+                if item[-1] == "*":
+                    self._plotsConfirmed += 1
+                else:
+                    self._plotsNotConfirmed += 1
+
+            if self._plotsConfirmed > 0:
+                self._confirmGroup.Update(disabled=False)
+            else:
+                self._confirmGroup.Update(disabled=True)
         else:
             self._setPlot.Update(disabled=True)
             self._deletePlot.Update(disabled=True)
             self._setAll.Update(disabled=True)
-            self._deleteAll.Update(disabled=True)
-
-        # Confirm button
-        self._plotsConfirmed = 0
-        self._plotsNotConfirmed = 0
-        for item in self._plotList.Values:
-            if item[-1] == "*":
-                self._plotsConfirmed += 1
-            else:
-                self._plotsNotConfirmed += 1
-
-        if self._plotsConfirmed > 0:
-            self._confirmGroup.Update(disabled=False)
-        else:
-            self._confirmGroup.Update(disabled=True)
+            self._deleteAll.Update(disabled=True)        
     ##########
 
     def addPlot(self):
         """Adds the number in the plot input to the plot list, and
         clears the input box"""
-        try:
+        if self._plotInput.get() != "":
             self._plotList.Values.append(self._plotInput.get())
             self._plotList.Update(self._plotList.Values)
             self._plotInput.Update("")
-        except:
-            pass
     ##########
 
     def markPlot(self, plot):
         "Adds a marker next to a plot on the list that has been confirmed"
+        counter = 0
         for item in self._plotList.Values:
             if item == plot:
-                item = item + " *"
+                self._plotList.Values[counter] = item + " *"
             self._plotList.Update(self._plotList.Values)
-            # Probably need to update values with item
+            counter += 1
     ##########
 
     def deletePlot(self):
@@ -162,3 +159,16 @@ class GroupDetails(Window):
         return plotListReturn
     ##########
 
+    def confirmGroup(self):
+        """Checks if all plots have been set, and then passes their
+        information to Data.allGroupsDict"""
+        validConfirm = False
+        for plot in self._plotList.Values:
+            if plot[-1:] != "*":
+                break
+            else:
+                validConfirm = True
+        if validConfirm == True:
+            add = self._data.checkConflicts()
+            if add == True:
+                self._window.close()

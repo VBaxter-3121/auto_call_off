@@ -19,6 +19,7 @@ class Organiser():
         self._openHome()
         self._data = data
         self._running = True
+        self._breakPlotLoop = False
     ##########
 
     def startProgram(self):
@@ -43,13 +44,9 @@ class Organiser():
         self._homeWindow = self._home.getWindow()
     ##########
 
-    def _openGroup(self, edit=False, group=""):
+    def _openGroup(self):
         "Creates a new instance of GroupDetails"
-        if edit == True:
-            preFill = self._data.getGroupDetails(group)
-            self._group = GroupDetails(self._data, preFill)
-        else:
-            self._group = GroupDetails(self._data)
+        self._group = GroupDetails(self._data)
         self._groupWindow = self._group.getWindow()
         self._homeWindow.disable()
         while True:
@@ -106,10 +103,9 @@ class Organiser():
 
         # Edit an existing group
         elif event == "editGroup":
-            ""
             group = self._home.getSelectedGroup()
             if group != None:
-                self._openGroup(True, group)
+                self._openGroup()
 
         # Delete the currently selected group
         elif event == "deleteGroup":
@@ -147,8 +143,12 @@ class Organiser():
                 pass
 
         elif event == "setAll":
+            self._breakPlotLoop = False
             for plot in self._group.getPlotList():
-                self._openPlot(values["developer"], values["site"], plot)
+                if self._breakPlotLoop == False:
+                    self._openPlot(values["developer"], values["site"], plot)
+                else:
+                    break
 
         elif event == "deletePlot":
             self._group.deletePlot()
@@ -160,23 +160,10 @@ class Organiser():
             self._group.deleteAll()
             self._groupWindow.close()
 
-        # See if you can add this as a function in GroupDetails
         elif event =="confirmGroup":
-            carryOn = ""
-            for plot in values["plotList"]:
-                if plot[-1:] != "*":
-                    # Make this a popup window
-                    print("You have not yet confirmed all plots, do you wish to continue?")
-                    carryOn = input()
-                    break
-            if carryOn == "n":
-                pass
-            elif carryOn == "" or carryOn == "y":
-                add = self._data.checkConflicts()
-                if add == True:
-                    self._groupWindow.close()
+            self._group.confirmGroup()
 
-        if event != sg.WIN_CLOSED and event != "cancelGroup":
+        if event != sg.WIN_CLOSED and event != "cancelGroup" and event != "confirmGroup":
             self._group.toggleButtons(values["developer"], values["site"])
     ##########
 
@@ -189,32 +176,29 @@ class Organiser():
         values: A list of values from self._plotWindow.read()
         """
 
-        if event == "clearSelection":
-            self._plot.clearSelection()
-
-        elif event =="saveDetails":
+        if event =="saveDetails":
             self._plot.saveDetails()
-            self._plot.clearSelection()
+            self._plot.clearChecks()
         
         elif event == "cancelPlot":
+            self._breakPlotLoop = True
             self._plotWindow.close()
 
         elif event == "deleteDetails":
             self._plot.deleteDetails()
 
         elif event == "editDetails":
-            self._plot.clearSelection()
+            self._plot.clearDetails()
             self._plot.editDetails()
 
         elif event == "clearDetails":
-            self._plot.clearSelection()
             self._plot.clearDetails()
 
         elif event == "cancelPlot":
             self._plotWindow.close()
 
         elif event == "confirmPlot":
-            detailsList = self._plot.confirmDetails()
+            detailsList = self._plot.confirmPlot()
             plot = detailsList[0][2]
             self._group.markPlot(plot)
             counter = 0
@@ -222,4 +206,7 @@ class Organiser():
                 self._data.addPlot(details, counter)
                 counter += 1
             self._plotWindow.close()
+
+        if event != sg.WIN_CLOSED and event != "cancelPlot" and event != "confirmPlot":
+            self._plot.toggleButtons()
     ##########

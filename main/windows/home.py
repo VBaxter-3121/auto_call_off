@@ -40,7 +40,7 @@ class Home(Window):
 
     def toggleButtons(self):
         """Checks if the edit, delete and start buttons should be enabled
-        and set them appropriately"""
+        and sets them appropriately"""
         if self._groupList.Values != []:
             self._editGroup.Update(disabled=False)
             self._deleteGroup.Update(disabled=False)

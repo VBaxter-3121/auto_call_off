@@ -25,42 +25,52 @@ class PlotDetails(Window):
             [
             sg.Column([
                     [sg.Text("Call Off Stages:")],
-                    [sg.Checkbox("Gutter Kit                ", default=False, key="gutter")],
-                    [sg.Checkbox("Downpipe Kit         ", default=False, key="downpipe")],
-                    [sg.Checkbox("Gas Kit                 ", default=False, key="gasKit")],
-                    [sg.Checkbox("1st Fix Kit             ", default=False, key="1stFixKit")],
-                    [sg.Checkbox("Soils Kit                ", default=False, key="soilsKit")],
-                    [sg.Checkbox("Shower Tray/Mid Fix", default=False, key="midFix")],
-                    [sg.Checkbox("Heating & Bath       ", default=False, key="heatingAndBath")],
-                    [sg.Checkbox("Fix 2                     ", default=False, key="fix2")],
-                    [sg.Checkbox("Sani                      ", default=False, key="sani")],
-                    [sg.Checkbox("Fix 3                     ", default=False, key="fix3")],
-                    [sg.Checkbox("Finals                   ", default=False, key="finals")],
-                    [sg.Checkbox("Fix 4                     ", default=False, key="fix4")],
+                    [sg.Checkbox("Gutter Kit                ", default=False, enable_events=True, key="gutter")],
+                    [sg.Checkbox("Downpipe Kit         ", default=False, enable_events=True, key="downpipe")],
+                    [sg.Checkbox("Gas Kit                 ", default=False, enable_events=True, key="gasKit")],
+                    [sg.Checkbox("1st Fix Kit             ", default=False, enable_events=True, key="1stFixKit")],
+                    [sg.Checkbox("Soils Kit                ", default=False, enable_events=True, key="soilsKit")],
+                    [sg.Checkbox("Shower Tray/Mid Fix", default=False, enable_events=True, key="midFix")],
+                    [sg.Checkbox("Heating & Bath       ", default=False, enable_events=True, key="heatingAndBath")],
+                    [sg.Checkbox("Fix 2                     ", default=False, enable_events=True, key="fix2")],
+                    [sg.Checkbox("Sani                      ", default=False, enable_events=True, key="sani")],
+                    [sg.Checkbox("Fix 3                     ", default=False, enable_events=True, key="fix3")],
+                    [sg.Checkbox("Finals                   ", default=False, enable_events=True, key="finals")],
+                    [sg.Checkbox("Fix 4                     ", default=False, enable_events=True, key="fix4")],
                     [sg.VPush()],
                     [sg.VPush()],
-                    [sg.Push(), sg.Button("Clear Selection", size=(15, 1), key="clearSelection"), sg.Push()]
+                    [
+                        sg.Push(), sg.Button("Clear Details", size=(15, 1), disabled=True,
+                        key="clearDetails"), sg.Push()
+                    ]
             ]),
             sg.VSeparator(),
             sg.Column([
                     [sg.Text("Date:")],
                     [
-                        sg.In(size=(10, 1), key="date"), sg.CalendarButton("📅",
+                        sg.In(size=(10, 1), enable_events=True, key="date"), sg.CalendarButton("📅",
                         close_when_date_chosen=True, target="date", no_titlebar=False,
-                        format=("%d/%m/%Y"), size=(3, 1), key="calendar")],
+                        format=("%d/%m/%Y"), size=(3, 1), enable_events=True, key="calendar")
+                    ],
                     [sg.Text("Time:")],
                     [sg.In(size=(10, 1), key="time")],
                     [sg.Text("Notes:")],
                     [sg.In(size=(25, 1), key="notes")],
-                    [sg.Button("Save Details", size=(21, 1), key="saveDetails"), sg.Push()],
+                    [
+                        sg.Button("Save Details", size=(21, 1), disabled=True,
+                        key="saveDetails"),sg.Push()
+                    ],
                     [sg.Text("_"*27), sg.Push()],
                     [sg.Listbox(values=[], size=(25, 10), key="detailsList")],
-                    [sg.Button("Delete", size=(10, 1), key="deleteDetails"), sg.Push(), sg.Button("Edit", size=(10, 1), key="editDetails")]
+                    [
+                        sg.Button("Delete", size=(10, 1), disabled=True, key="deleteDetails"),
+                        sg.Push(), sg.Button("Edit", size=(10, 1), disabled=True, key="editDetails")
+                    ]
             ])
             ],
             [sg.Push(), sg.Text("_"*54), sg.Push()],
             [
-                sg.Push(), sg.Button("Clear Details", size=(14, 1), key="clearDetails"), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
+                sg.Push(), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
                 sg.Button("Confirm", size=(14, 1), key="confirmPlot"), sg.Push()
             ]
         ]
@@ -85,7 +95,7 @@ class PlotDetails(Window):
         self._fix4 = self._window["fix4"]
 
         # Others
-        self._clearSelection = self._window["clearSelection"]
+        self._clearDetails = self._window["clearDetails"]
         self._date = self._window["date"]
         self._calendar = self._window["calendar"]
         self._time = self._window["time"]
@@ -94,7 +104,6 @@ class PlotDetails(Window):
         self._detailsList = self._window["detailsList"]
         self._deleteDetails = self._window["deleteDetails"]
         self._editDetails = self._window["editDetails"]
-        self._clearDetails = self._window["clearDetails"]
         self._cancelPlot = self._window["cancelPlot"]
         self._confirmPlot = self._window["confirmPlot"]
 
@@ -117,33 +126,44 @@ class PlotDetails(Window):
         ]
     ##########
 
-    def clearSelection(self):
+    def clearDetails(self):
+        "Sets all checkboxes, date, time and notes to empty"
+        for checkbox in self._checkboxes:
+            checkbox.update(False)
+        self._date.Update("")
+        self._time.Update("")
+        self._notes.Update("")
+
+    def clearChecks(self):
         "Sets all checkboxes to empty"
         for checkbox in self._checkboxes:
             checkbox.update(False)
     ##########
 
     def saveDetails(self):
-        """Saves details to detailsListTechnical, and displays
+        """Saves details to allDetails, and displays
         call off stages in detailsList. Sets all checkboxes to
         empty but leaves date, time and notes untouched"""
-        stages = []
-        counter = 0
-        for checkbox in self._checkboxes:
-            if checkbox.get() == True:
-                stages.append(self._stages[counter])
-            counter += 1
-        if len(stages) > 1:
-            self._allDetails[f"{stages[0]} etc."] = [self._developer,
-            self._site, self._plot, stages,
-            self._date.get(), self._time.get(), "", self._notes.get()]
-        else:
-            self._allDetails[f"{stages[0]}"] = [self._developer,
-            self._site, self._plot, stages, self._date.get(),
-            self._time.get(), "", self._notes.get()]
-        
-        self._detailsList.Update(values=self._allDetails.keys())
-        print(self._allDetails)
+        try:
+            stages = []
+            counter = 0
+            for checkbox in self._checkboxes:
+                if checkbox.get() == True:
+                    stages.append(self._stages[counter])
+                counter += 1
+            if len(stages) > 1:
+                self._allDetails[f"{stages[0]} etc."] = [self._developer,
+                self._site, self._plot, stages,
+                self._date.get(), self._time.get(), "", self._notes.get()]
+            else:
+                self._allDetails[f"{stages[0]}"] = [self._developer,
+                self._site, self._plot, stages, self._date.get(),
+                self._time.get(), "", self._notes.get()]
+            
+            self._detailsList.Update(values=self._allDetails.keys())
+            print(self._allDetails)
+        except:
+            pass
     ##########
 
     def deleteDetails(self):
@@ -171,16 +191,37 @@ class PlotDetails(Window):
             pass
     ##########
 
-    def clearDetails(self):
-        "Empties the date, time and notes sections"
-        self._date.Update("")
-        self._time.Update("")
-        self._notes.Update("")
-    ##########
-
-    def confirmDetails(self):
+    def confirmPlot(self):
         "Adds all details to Data.currentGroupDict"
+
         returnList = []
         for key in self._allDetails:
             returnList.append(self._allDetails[key])
         return returnList
+
+    def toggleButtons(self):
+        """Checks if the clear, save, delete, edit, and confirm
+        buttons should be enabled and sets them appropriately"""
+        checkMarked = False
+        for checkbox in self._checkboxes:
+            if checkbox.get() == True:
+                checkMarked = True
+                break
+        if checkMarked:
+            self._clearDetails.Update(disabled=False)
+        else:
+            self._clearDetails.Update(disabled=True)
+
+        if checkMarked and self._date.get() != "":
+            self._saveDetails.Update(disabled=False)
+        else:
+            self._saveDetails.Update(disabled=True)
+
+        if self._detailsList.Values != []:
+            self._deleteDetails.Update(disabled=False)
+            self._editDetails.Update(disabled=False)
+            self._confirmPlot.Update(disabled=False)
+        else:
+            self._deleteDetails.Update(disabled=True)
+            self._editDetails.Update(disabled=True)
+            self._confirmPlot.Update(disabled=True)
