@@ -50,7 +50,7 @@ class PlotDetails(Window):
                     [
                         sg.In(size=(10, 1), enable_events=True, key="date"), sg.CalendarButton("📅",
                         close_when_date_chosen=True, target="date", no_titlebar=False,
-                        format=("%d/%m/%Y"), size=(3, 1), enable_events=True, key="calendar")
+                        format=("%d/%m/%Y"), size=(3, 1), key="calendar")
                     ],
                     [sg.Text("Time:")],
                     [sg.In(size=(10, 1), key="time")],

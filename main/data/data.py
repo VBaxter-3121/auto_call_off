@@ -128,3 +128,10 @@ class Data():
                 if f"Plot {plot}-" in key:
                     self._currentGroupDict.pop(key)
     ##########
+
+    def getAllGroups(self):
+        "Returns keys from allGroupsDict"
+        returnList = []
+        for key in self._allGroupsDict:
+            returnList.append(key)
+        return returnList

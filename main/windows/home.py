@@ -68,3 +68,9 @@ class Home(Window):
         except:
             pass
     ##########
+
+    def updateList(self, groupsList):
+        "Refreshes list with data from allGroupsDict"
+        for group in groupsList:
+            self._groupList.Values.append(group)
+            self._groupList.Update(self._groupList.Values)

@@ -162,6 +162,8 @@ class Organiser():
 
         elif event =="confirmGroup":
             self._group.confirmGroup()
+            homeList = self._data.getAllGroups()
+            self._home.updateList(homeList)
 
         if event != sg.WIN_CLOSED and event != "cancelGroup" and event != "confirmGroup":
             self._group.toggleButtons(values["developer"], values["site"])
