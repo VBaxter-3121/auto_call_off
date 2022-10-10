@@ -14,7 +14,7 @@ class Data():
         self._jobDetails = jobDetails
     ##########
 
-    def _addGroup(self, groupName, group):
+    def addGroup(self):
         """Adds a new group to the data dictionary
         
         Parameters:
@@ -26,7 +26,10 @@ class Data():
         }
         orderNumbers will later replace callOffStages
         """
-        self._allGroupsDict[groupName] = group
+        firstKey = next(iter(self._currentGroupDict))
+        groupName = f"{self._currentGroupDict[firstKey][0]}, {self._currentGroupDict[firstKey][1]}"
+
+        self._allGroupsDict[groupName] = self._currentGroupDict
         ## For testing ##
         print(self._allGroupsDict)
     ##########
@@ -46,16 +49,26 @@ class Data():
         """
         # As all entries in any group will have the same developer and site
         # names, just take the first key and take the information from that one
-        firstKey = next(iter(self._currentGroupDict))
-        groupName = f"{self._currentGroupDict[firstKey][0]}, {self._currentGroupDict[firstKey][1]}"
+        # firstKey = next(iter(self._currentGroupDict))
+        # groupName = f"{self._currentGroupDict[firstKey][0]}, {self._currentGroupDict[firstKey][1]}"
 
-        if groupName not in self._allGroupsDict:
-            self._addGroup(groupName, self._currentGroupDict)
-            self._currentGroupDict = {}
-            return True
-        else:
-            return False
-            # Here code for merging will be added
+        # if groupName not in self._allGroupsDict:
+        #     self._addGroup(groupName, self._currentGroupDict)
+        #     self._currentGroupDict = {}
+        #     return True
+        # else:
+        #     existingKeys = []
+        #     newKeys = []
+
+        #     for key in self._allGroupsDict[groupName]:
+        #         existingKeys.append(key)
+            
+        #     for key in self._currentGroupDict:
+        #         newKeys.append(key)
+
+        #     for key in newKeys:
+        #         if key in existingKeys:
+
     ##########
 
     def deleteGroup(self, key):
@@ -98,16 +111,6 @@ class Data():
         # Get the contracts manager and insert it into position 6
         self._currentGroupDict[f"Plot {plotKey}"] = plotInfo
     ##########
-
-    # def addGroup(self):
-    #     """Adds a complete group dictionary to allGroupsDict. If there already
-    #     exists a key for the given developer/site combo, it will attempt to
-    #     merge the two dictionaries"""
-
-    #     ## See if this is correct ##
-    #     developer = next(iter(self._currentGroupDict))[0]
-    #     site = next(iter(self._currentGroupDict))[1]
-    # ##########
 
     def getGroupDetails(self, group):
         """Returns the developer, site and list of plots from a given group

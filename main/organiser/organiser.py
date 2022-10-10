@@ -101,12 +101,6 @@ class Organiser():
         if event == "addNewGroup":
             self._openGroup()
 
-        # Edit an existing group
-        elif event == "editGroup":
-            group = self._home.getSelectedGroup()
-            if group != None:
-                self._openGroup()
-
         # Delete the currently selected group
         elif event == "deleteGroup":
             self._home.deleteGroup()

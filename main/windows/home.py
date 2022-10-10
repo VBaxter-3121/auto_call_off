@@ -20,8 +20,8 @@ class Home(Window):
             [sg.Text("Groups:")],
             [sg.Listbox(values=[], size=(45, 10), key="groupList")],
             [
-                sg.Button("Add New Group", size=(12, 1), key="addNewGroup"), sg.Button("Edit Group", size=(12, 1), disabled=True, key="editGroup"),
-                sg.Button("Delete Group", size=(12, 1), disabled=True, key="deleteGroup")
+                sg.Button("Add New Group", size=(18, 1), key="addNewGroup"), sg.Push(),
+                sg.Button("Delete Group", size=(18, 1), disabled=True, key="deleteGroup")
             ],
             [sg.Push(), sg.Button("Start Call Offs", size=(38, 1), disabled=True, key="startCallOffs"), sg.Push()]
         ]
@@ -31,7 +31,6 @@ class Home(Window):
         ## Key variables
         self._groupList = self._window["groupList"]
         self._addNewGroup = self._window["addNewGroup"]
-        self._editGroup = self._window["editGroup"]
         self._deleteGroup = self._window["deleteGroup"]
         self._startCallOffs = self._window["startCallOffs"]
 
@@ -42,11 +41,9 @@ class Home(Window):
         """Checks if the edit, delete and start buttons should be enabled
         and sets them appropriately"""
         if self._groupList.Values != []:
-            self._editGroup.Update(disabled=False)
             self._deleteGroup.Update(disabled=False)
             self._startCallOffs.Update(disabled=False)
         else:
-            self._editGroup.Update(disabled=True)
             self._deleteGroup.Update(disabled=True)
             self._startCallOffs.Update(disabled=True)
     ##########

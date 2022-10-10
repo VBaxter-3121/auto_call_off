@@ -169,6 +169,5 @@ class GroupDetails(Window):
             else:
                 validConfirm = True
         if validConfirm == True:
-            add = self._data.checkConflicts()
-            if add == True:
-                self._window.close()
+            self._data.addGroup()
+            self._window.close()
