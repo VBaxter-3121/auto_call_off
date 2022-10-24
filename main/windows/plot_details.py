@@ -1,6 +1,4 @@
-from turtle import back
 import PySimpleGUI as sg
-from numpy import safe_eval
 from windows.window import Window
 
 class PlotDetails(Window):
@@ -20,6 +18,13 @@ class PlotDetails(Window):
     """
 
     def __init__(self, developer, site, plot):
+        """Contructs an instance of the 'PlotDetails' class
+        
+        Parameters:
+        developer:
+        site:
+        plot:
+        """
         self._title = f"Plot {plot} Details"
         self._layout = [
             [

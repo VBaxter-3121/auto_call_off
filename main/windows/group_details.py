@@ -16,7 +16,11 @@ class GroupDetails(Window):
     """
 
     def __init__(self, data):
-        "Contructs the 'Group Details' window"
+        """Contructs an instance of the 'Group Details' class
+        
+        Parameters:
+        data: An instance of the Data class
+        """
         self._title = "Group Details"
         self._layout = [
             [sg.Text("Developer:")],

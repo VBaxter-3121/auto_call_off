@@ -1,26 +1,23 @@
-from locale import delocalize
-from winreg import DeleteValue
 import PySimpleGUI as sg
 
 from windows.home import Home
 from windows.group_details import GroupDetails
 from windows.plot_details import PlotDetails
 
-class Organiser():
+class GUIOrganiser():
     """Controls which windows are open, how they behave and how they store
     their data"""
 
     def __init__(self, data):
-        """Contructs the organiser class
+        """Contructs an instancethe GUIorganiser class
         
         Attributes:
-        data: An instance of the Data class
+        data (Data): An instance of the Data class
+        breakPlotLoop (bool): Used to interrupt the "Set all plots" loop
         """
         self._openHome()
         self._data = data
-        self._running = True
         self._breakPlotLoop = False
-    ##########
 
     def startProgram(self):
         "Begins a loop to read window events"
@@ -34,15 +31,11 @@ class Organiser():
 
             if event == sg.WIN_CLOSED:
                 break
-    ##########
-
-    ########## Window Opening Methods ##########
 
     def _openHome(self):
         "Creates a new instance of Home"
         self._home = Home()
         self._homeWindow = self._home.getWindow()
-    ##########
 
     def _openGroup(self):
         "Creates a new instance of GroupDetails"
@@ -61,13 +54,14 @@ class Organiser():
                 self._homeWindow.bring_to_front()
                 break
         self._homeWindow.enable()
-    ##########
     
     def _openPlot(self, developer, site, plot):
         """Creates a new instance of PlotDetails
         
         Parameters:
-        plot: A string containing the current plot number
+        developer (str): The name of the current developer
+        site (str): The name of the current site
+        plot (str): The current plot number
         """
         self._plot = PlotDetails(developer, site, plot)
         self._plotWindow = self._plot.getWindow()
@@ -85,17 +79,15 @@ class Organiser():
                 self._groupWindow.bring_to_front()
                 break
         self._groupWindow.enable()
-    ##########
 
-    ########## Listening Methods ##########
 
     def _listenHome(self, event, values):
         """Contains events specific to the home window, and runs other logic checks
         to enable or disable window elements
         
-        Attributes:
-        event: An event from self._homeWindow.read()
-        values: A list of values from self._homeWindow.read()
+        Parameters:
+        event (str): The current event
+        values (list): The current values
         """
         # Add a new group
         if event == "addNewGroup":
@@ -107,19 +99,18 @@ class Organiser():
 
         # Pass user input to call off functions
         elif event == "startCallOffs":
-            ""
+            self._homeWindow.close()
 
-        if event != sg.WIN_CLOSED:
+        if event != sg.WIN_CLOSED and event != "startCallOffs":
             self._home.toggleButtons()
-    ##########
 
     def _listenGroup(self, event, values):
         """Contains events specific to the group details window, and runs other logic checks
         to enable or disable window elements
         
         Attributes:
-        event: An event from self._groupWindow.read()
-        values: A list of values from self._groupWindow.read()
+        event (str): The current event
+        values (list): The current values
         """
 
         if event == "developer":
@@ -161,15 +152,14 @@ class Organiser():
 
         if event != sg.WIN_CLOSED and event != "cancelGroup" and event != "confirmGroup":
             self._group.toggleButtons(values["developer"], values["site"])
-    ##########
 
     def _listenPlot(self, event, values):
         """Contains events specific to the plot details window, and runs other logic checks
         to enable or disable window elements
         
         Attributes:
-        event: An event from self._plotWindow.read()
-        values: A list of values from self._plotWindow.read()
+        event (str): The current event
+        values (list): The current values
         """
 
         if event =="saveDetails":
@@ -205,4 +195,3 @@ class Organiser():
 
         if event != sg.WIN_CLOSED and event != "cancelPlot" and event != "confirmPlot":
             self._plot.toggleButtons()
-    ##########

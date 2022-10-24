@@ -14,7 +14,7 @@ class Home(Window):
     """
 
     def __init__(self):
-        "Constructs the 'Home' window"
+        "Contructs an instance of the 'Home' class"
         self._title = "Auto Call Off"
         self._layout = [
             [sg.Text("Groups:")],

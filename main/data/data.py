@@ -5,9 +5,10 @@ class Data():
     the program"""
 
     def __init__(self):
-        "Contructs the data class"
+        "Contructs Contructs an instance of the data class"
 
         self._allGroupsDict = {}
+        print(self._allGroupsDict)
         # currentGroupDict will be reset at the start of making a new group.
         # It will have a key added to it every time a plot is confirmed.
         self._currentGroupDict = {}
@@ -138,3 +139,11 @@ class Data():
         for key in self._allGroupsDict:
             returnList.append(key)
         return returnList
+
+    def getAllGroupsDict(self):
+        "Returns allGroupsDict"
+        return self._allGroupsDict
+
+    def getSiteNumber(self, developer, site):
+        "Returns a site number"
+        return self._jobDetails[developer][site][0]
