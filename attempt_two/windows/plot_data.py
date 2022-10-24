@@ -17,13 +17,13 @@ class PlotData(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, groupName, plots):
+    def __init__(self, title, plots):
         """Contructs an instance of the 'PlotData' class
                 
         Parameters:
         groupName (str): The name of the current group
         """
-        self._title = groupName
+        self._title = title
         self._layout = [
             [sg.Push(), sg.Button("Prev", size=(5, 1), disabled=True, key="prevButton"), 
                 sg.Text(f"Plot {plots[0]}", key="plotNumber"),
