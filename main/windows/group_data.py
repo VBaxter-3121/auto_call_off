@@ -109,6 +109,7 @@ class GroupData(Window):
         else:
             self._setPlots.update(disabled=True)
 
+        # Delete toggle is not working correctly
         # Delete Plot
         if (self._callOffData.readPlots(self._title) != {} and
             event != "deletePlot" and event != "deleteAll"):

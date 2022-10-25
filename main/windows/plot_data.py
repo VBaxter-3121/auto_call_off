@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from windows.window import Window
+from data.job_details import jobDetails
 
 class PlotData(Window):
     """This window allows the user to enter the call off stages, date,
@@ -27,6 +28,11 @@ class PlotData(Window):
         self._title = title
         self._plots = plots
         self._currentPlotIndex = 0
+        self._stages = [
+            "GUTTER KIT", "DOWNPIPE KIT", "GAS KIT",
+            "1ST FIX KIT", "SOILS KIT", "MID FIX", "HEATING & BATH",
+            "FIX 2", "SANI", "FIX 3", "FINALS", "FIX 4"
+        ]
         if len(self._plots) > 1:
             self._multiplePlots = False
         else:
@@ -75,7 +81,6 @@ class PlotData(Window):
         # self._window.DisableClose=True
 
         ## Key variables
-
         # Checkboxes
         self._gutter = self._window["gutter"]
         self._downpipe = self._window["downpipe"]
@@ -89,14 +94,12 @@ class PlotData(Window):
         self._fix3 = self._window["fix3"]
         self._finals = self._window["finals"]
         self._fix4 = self._window["fix4"]
-
         self._checkboxes = [
             self._gutter, self._downpipe,
             self._gasKit, self._1stFixKit, self._soilsKit,
             self._midFix, self._heatAndBath, self._fix2,
             self._sani, self._fix3, self._finals, self._fix4
         ]
-
         # Others
         self._prevButton = self._window["prevButton"]
         self._plotNumber = self._window["plotNumber"]
@@ -138,12 +141,17 @@ class PlotData(Window):
 
             # Save Data pressed
             elif event == "saveData":
-                pass
+                dataSet = self._makeDataSet()
+                self._callOffData.writeDataSet(self._title,
+                    self._plots[self._currentPlotIndex], dataSet)
+                self._dataList.update(values=self._callOffData.readDataSet(self._title,
+                    self._plots[self._currentPlotIndex], dataSet))
 
             # Delete Data pressed
             elif event == "deleteData":
-                self._dataList.Values.remove(values["dataList"][0])
-                self._dataList.update(self._dataList.Values)
+                # self._dataList.Values.remove(values["dataList"][0])
+                # self._dataList.update(self._dataList.Values)
+                pass
 
             self._toggleDisabled(event, values)
 
@@ -176,3 +184,23 @@ class PlotData(Window):
             self._deleteData.update(disabled=False)
         else:
             self._deleteData.update(disabled=True)
+
+    def _getStages(self):
+        "Returns a list of requried stages for call off"
+        # Check the below link for explanation (answer by Tomerikoo)
+        # https://stackoverflow.com/questions/6294179/how-to-find-all-occurrences-of-an-element-in-a-list
+        indices = (index for index, item in
+            enumerate(list(map(lambda checkbox : checkbox.get(), self._checkboxes))) if item == True)
+        return list(map(lambda indices : self._stages[indices], indices))
+
+    def _makeDataSet(self):
+        "Returns a list of values used for the call off"
+        developer = self._title.split(", ")[0]
+        site = self._title.split(", ")[1]
+        plotNumber = self._plots[self._currentPlotIndex]
+        requiredStages = self._getStages()
+        date = self._date.get()
+        time = self._time.get()
+        manager = jobDetails[developer][site][1]
+        notes = self._notes.get()
+        return [developer, site, plotNumber, requiredStages, date, time, manager, notes]

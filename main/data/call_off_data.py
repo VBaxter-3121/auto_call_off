@@ -1,3 +1,6 @@
+from tokenize import group
+
+
 class CallOffData():
     """Contains a dictionary that holds all the data for
     current call offs. Certain parts of this dictionary
@@ -32,7 +35,7 @@ class CallOffData():
     def readPlots(self, groupName):
         """Returns a list of plot numbers belonging to the key
         specified by groupName (used by group data and plot data)"""
-        return self._callOffDict[groupName].keys()
+        return (list(map(lambda key : key, self._callOffDict[groupName].keys())))
 
     def writePlot(self, groupName, plotNumber):
         "Updates the dictionary with a new plot number"
@@ -61,9 +64,11 @@ class CallOffData():
     def readDataSet(self, groupName, plotNumber, dataSet):
         """Populates the plot data window with data from callOffDict
         (used by plot data)"""
+        return self._callOffDict[groupName][plotNumber]
 
     def writeDataSet(self, groupName, plotNumber, dataSet):
         "Saves data from plot data window to callOffDict (used by plot data)"
+        self._callOffDict[groupName][plotNumber].append(dataSet)
 
     def _printDict(self):
         "For debugging"
