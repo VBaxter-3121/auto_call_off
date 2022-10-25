@@ -23,3 +23,9 @@ class Window:
     def getWindow(self):
         "Returns the window attribute"
         return self._window
+
+    def read(self):
+        "Template to polymorph"
+
+    def _toggleDisabled(self, event, values):
+        "Template to polymorph"
