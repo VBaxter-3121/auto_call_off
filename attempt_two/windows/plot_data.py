@@ -17,17 +17,24 @@ class PlotData(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, title, plots):
+    def __init__(self, title, plots, data):
         """Contructs an instance of the 'PlotData' class
                 
         Parameters:
         groupName (str): The name of the current group
         """
+        self._callOffData = data
         self._title = title
+        self._plots = plots
+        self._currentPlotIndex = 0
+        if len(self._plots) > 1:
+            self._multiplePlots = False
+        else:
+            self._multiplePlots = True
         self._layout = [
             [sg.Push(), sg.Button("Prev", size=(5, 1), disabled=True, key="prevButton"), 
-                sg.Text(f"Plot {plots[0]}", key="plotNumber"),
-                sg.Button("Next", size=(5, 1), disabled=True, key="nextButton"), sg.Push()],
+                sg.Text(f"Plot {self._plots[self._currentPlotIndex]}", key="plotNumber"),
+                sg.Button("Next", size=(5, 1), disabled=self._multiplePlots, key="nextButton"), sg.Push()],
             [sg.Column([
                     [sg.Text("Call Off Stages:")],
                     [sg.Checkbox("Gutter Kit                ", default=False, enable_events=True, key="gutter")],
@@ -57,12 +64,11 @@ class PlotData(Window):
                     [sg.Button("Save Data", size=(8, 1), disabled=True, key="saveData"),
                         sg.Button("Clear Data", size=(8, 1), key="clearData")],
                     [sg.Listbox(values=[], size=(19, 11), key="dataList")],
-                    [sg.Button("Delete", size=(8, 1), disabled=True, key="deleteDataSet"),
-                        sg.Button("Edit", size=(8, 1), disabled=True, key="editDataSet")]
+                    [sg.Button("Delete", size=(18, 1), disabled=True, key="deleteData")]
             ])
             ],
-            [sg.Push(), sg.Button("Cancel", size=(14, 1), key="cancelPlot"),
-                sg.Button("Confirm", size=(14, 1), disabled=True, key="confirmPlot"), sg.Push()]
+            [sg.Push(), sg.Button("Cancel", size=(14, 1), key="cancelPlots"),
+                sg.Button("Confirm", size=(14, 1), key="confirmPlots"), sg.Push()]
         ]
 
         super().__init__(self._title, self._layout)
@@ -103,7 +109,70 @@ class PlotData(Window):
         self._saveData = self._window["saveData"]
         self._clearData = self._window["clearData"]
         self._dataList = self._window["dataList"]
-        self._deleteData = self._window["deleteDataSet"]
-        self._editData = self._window["editDataSet"]
-        self._cancelPlot = self._window["cancelPlot"]
-        self._confirmPlot = self._window["confirmPlot"]
+        self._deleteData = self._window["deleteData"]
+        self._cancelPlots = self._window["cancelPlots"]
+        self._confirmPlots = self._window["confirmPlots"]
+
+    def read(self):
+        "Handles events and values related to the plot data window"
+        while True:
+            event, values = self._window.read()
+
+            # For debugging
+            print(event)
+
+            # Window closed
+            if event == sg.WIN_CLOSED or event == "cancelPlots":
+                self._window.close()
+                break
+
+            # Prev pressed
+            elif event == "prevButton":
+                self._currentPlotIndex -= 1
+                self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+
+            # Next pressed
+            elif event == "nextButton":
+                self._currentPlotIndex += 1
+                self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+
+            # Save Data pressed
+            elif event == "saveData":
+                pass
+
+            # Delete Data pressed
+            elif event == "deleteData":
+                self._dataList.Values.remove(values["dataList"][0])
+                self._dataList.update(self._dataList.Values)
+
+            self._toggleDisabled(event, values)
+
+            # Update data depending on current plot here
+
+    def _toggleDisabled(self, event, values):
+        "Checks if each button should be disabled or not"
+
+        # Prev Plot
+        if self._currentPlotIndex != 0:
+            self._prevButton.update(disabled=False)
+        else:
+            self._prevButton.update(disabled=True)
+
+        # Next Plot
+        if self._currentPlotIndex != len(self._plots) - 1:
+            self._nextButton.update(disabled=False)
+        else:
+            self._nextButton.update(disabled=True)
+
+        # Save Data
+        if (True in list(map(lambda checkbox : checkbox.get(), self._checkboxes)) and
+            self._date.get() != ""):
+            self._saveData.update(disabled=False)
+        else:
+            self._saveData.update(disabled=True)
+        
+        # Delete Data
+        if values["dataList"] != [] and event != "deleteData":
+            self._deleteData.update(disabled=False)
+        else:
+            self._deleteData.update(disabled=True)

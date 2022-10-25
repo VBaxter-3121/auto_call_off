@@ -15,18 +15,20 @@ class GroupData(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, title):
+    def __init__(self, groupName, data):
         """Contructs an instance of the 'Group Data' class
         
         Parameters:
         title (str): The name of the current group
         """
-        self._title = title
+        self._callOffData = data
+        self._title = groupName
+        plots = self._callOffData.readPlots(groupName)
         self._layout = [
-            [sg.Text(title)],
+            [sg.Text(groupName)],
             [sg.In(size=(5, 1), enable_events=True, key="plotInput"), sg.Text("Type plot number and press 'enter'")],
             [sg.Text("Plots:")],
-            [sg.Listbox(values=[], size=(33, 10), enable_events=True, key="plotList")],
+            [sg.Listbox(values=plots, size=(33, 10), enable_events=True, key="plotList")],
             [sg.Button("Set Plots", size=(8, 1), disabled=True, key="setPlots"), sg.Push(),
                 sg.Button("Delete", size=(8, 1), disabled=True, key="deletePlot"), sg.Push(),
                 sg.Button("Delete All", size=(8, 1), disabled=True, key="deleteAll")],
@@ -50,7 +52,7 @@ class GroupData(Window):
         self._plotInput.bind("<Return>", "Add")
 
     def read(self):
-        "Handles events and values related to the home window"
+        "Handles events and values related to the group data window"
         while True:
             event, values = self._window.read()
 
@@ -63,26 +65,37 @@ class GroupData(Window):
 
             # Plot number added
             elif event == "plotInputAdd":
-                if values["plotInput"] not in self._plotList.Values:
+                # if values["plotInput"] not in self._plotList.Values:
+                #     # Add new plot number to list
+                #     self._plotList.Values.append(values["plotInput"])
+                #     self._plotList.update(values=self._plotList.Values)
+                #     # Empty plot number input box
+                #     self._plotInput.update("")
+                if values["plotInput"] not in self._callOffData.readPlots(self._title):
                     # Add new plot number to list
-                    self._plotList.Values.append(values["plotInput"])
-                    self._plotList.update(values=self._plotList.Values)
+                    self._callOffData.writePlot(self._title, values["plotInput"])
+                    self._plotList.update(values=self._callOffData.readPlots(self._title))
                     # Empty plot number input box
                     self._plotInput.update("")
 
             # Set Plots pressed
             elif event == "setPlots":
-                plotData = PlotData(self._title, self._plotList.Values)
-                print(self._plotList.Values)
+                plotData = PlotData(self._title, self._plotList.Values, self._callOffData)
+                plotData.read()
 
             # Delete Plot pressed
             elif event == "deletePlot":
-                self._plotList.Values.remove(values["plotList"][0])
-                self._plotList.update(values=self._plotList.Values)
+                # self._plotList.Values.remove(values["plotList"][0])
+                # self._plotList.update(values=self._plotList.Values)
+                self._callOffData.deletePlot(self._title, values["plotList"][0])
+                self._plotList.update(values=self._callOffData.readPlots(self._title))
 
             # Delete All pressed
             elif event == "deleteAll":
-                self._plotList.update(values=[])
+                # self._plotList.update(values=[])
+                for plot in self._plotList.Values:
+                    self._callOffData.deletePlot(self._title, plot)
+                    self._plotList.update(values=self._callOffData.readPlots(self._title))
 
             self._toggleDisabled(event, values)
         
@@ -91,20 +104,21 @@ class GroupData(Window):
     def _toggleDisabled(self, event, values):
         "Checks if each button should be disabled or not"
         # Set Plots
-        print(self._plotList.Values)
-        if self._plotList.Values != []:
+        if self._callOffData.readPlots(self._title) != {}:
             self._setPlots.update(disabled=False)
         else:
             self._setPlots.update(disabled=True)
 
         # Delete Plot
-        if values["plotList"] != [] and event != "deletePlot" and event != "deleteAll":
+        if (self._callOffData.readPlots(self._title) != {} and
+            event != "deletePlot" and event != "deleteAll"):
             self._deletePlot.update(disabled=False)
         else:
             self._deletePlot.update(disabled=True)
 
         # Delete All
-        if self._plotList.Values != [] and event != "deleteAll":
+        if (self._callOffData.readPlots(self._title) != {} and
+            event != "deleteAll"):
             self._deleteAll.update(disabled=False)
         else:
             self._deleteAll.update(disabled=True)

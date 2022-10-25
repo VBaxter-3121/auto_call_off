@@ -15,16 +15,17 @@ class Home(Window):
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self):
+    def __init__(self, data):
         "Contructs an instance of the 'Home' class"
+        self._callOffData = data
         self._title = "Auto Call Off"
         self._layout = [
             [sg.Text("Developer:")],
-            [sg.Combo(values=[], size=(35, 1), enable_events=True, key="developer")],
+            [sg.Combo(values=[], size=(40, 1), enable_events=True, key="developer")],
             [sg.Text("Site:")],
-            [sg.Combo(values=[], size=(35, 1), enable_events=True, key="site")],
+            [sg.Combo(values=[], size=(40, 1), enable_events=True, key="site")],
             [sg.Text("Groups:")],
-            [sg.Listbox(values=[], size=(35, 10), enable_events=True, key="groupList")],
+            [sg.Listbox(values=[], size=(40, 10), enable_events=True, key="groupList")],
             [sg.Button("Add Group", size=(13, 1), disabled=True, key="addGroup"), sg.Push(),
                 sg.Button("Delete Group", size=(13, 1), disabled=True, key="deleteGroup")],
             [sg.Button("Edit Group", size=(13, 1), disabled=True, key="editGroup"), sg.Push(),
@@ -63,32 +64,36 @@ class Home(Window):
             
             # Add Group pressed
             elif event == "addGroup":
-                # Prevent identical groups being added
-                if f"{values['developer']}, {values['site']}" not in self._groupList.Values:
-                    # Add new group to list
-                    self._groupList.Values.append(f"{values['developer']}, {values['site']}")
-                    self._groupList.update(values=self._groupList.Values)
-                    # Empty developer and site boxes
-                    self._developer.update("")
-                    self._site.update(values="")
+                # Add new group
+                self._callOffData.writeGroup(f"{values['developer']}, {values['site']}")
+                # self._groupList.update(values=self._callOffData.readGroups())
+                self._refreshList()
+                # Empty developer and site boxes
+                self._developer.update("")
+                self._site.update(values="")
 
             # Delete Group pressed
             elif event == "deleteGroup":
-                # Remove group from list
-                self._groupList.Values.remove(values["groupList"][0])
-                self._groupList.update(values=self._groupList.Values)
+                # Remove group
+                self._callOffData.deleteGroup(values["groupList"][0].replace(" *NO DATA*", ""))
+                self._refreshList()
+                # self._groupList.update(values=self._callOffData.readGroups())
+                
 
             # Edit Button pressed
             elif event == "editGroup":
-                groupData = GroupData(values["groupList"][0])
+                groupData = GroupData(values["groupList"][0].replace(" *NO DATA*", ""), self._callOffData)
                 groupData.read()
+                self._refreshList()
 
             self._toggleDisabled(event, values)
     
     def _toggleDisabled(self, event, values):
         "Checks if each button should be disabled or not"
         # Add Group
-        if values["site"] != "" and event != "addGroup":
+        if (values["site"] != "" and event != "addGroup" and
+        f"{values['developer']}, {values['site']}" not in
+        self._callOffData.readGroups()):
             self._addGroup.update(disabled=False)
         else:
             self._addGroup.update(disabled=True)
@@ -103,3 +108,18 @@ class Home(Window):
 
         # Start Call Offs
         pass
+
+    def _refreshList(self):
+        "Refreshed the groups list"
+        currentGroups = self._markEmptyGroups()
+        self._groupList.update(values=currentGroups)
+
+    def _markEmptyGroups(self):
+        "Checks if each group in list is empty"
+        currentGroups = self._callOffData.readGroups()
+        for group in currentGroups:
+            isEmpty = self._callOffData.groupEmpty(group)
+            if isEmpty:
+                groupIndex = currentGroups.index(group)
+                currentGroups[groupIndex] = f"{group} *NO DATA*"
+        return currentGroups
