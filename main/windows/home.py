@@ -66,7 +66,6 @@ class Home(Window):
             elif event == "addGroup":
                 # Add new group
                 self._callOffData.writeGroup(f"{values['developer']}, {values['site']}")
-                # self._groupList.update(values=self._callOffData.readGroups())
                 self._refreshList()
                 # Empty developer and site boxes
                 self._developer.update("")
@@ -77,13 +76,14 @@ class Home(Window):
                 # Remove group
                 self._callOffData.deleteGroup(values["groupList"][0].replace(" *NO DATA*", ""))
                 self._refreshList()
-                # self._groupList.update(values=self._callOffData.readGroups())
-                
 
             # Edit Button pressed
             elif event == "editGroup":
                 groupData = GroupData(values["groupList"][0].replace(" *NO DATA*", ""), self._callOffData)
+                self._window.disable()
                 groupData.read()
+                self._window.enable()
+                self._window.bring_to_front()
                 self._refreshList()
 
             self._toggleDisabled(event, values)

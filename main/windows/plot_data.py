@@ -75,12 +75,11 @@ class PlotData(Window):
                     [sg.Button("Delete", size=(18, 1), disabled=True, key="deleteData")]
             ])
             ],
-            [sg.Push(), sg.Button("Cancel", size=(14, 1), key="cancelPlots"),
+            [sg.Push(), sg.Button("Back", size=(14, 1), key="back"),
                 sg.Button("Confirm", size=(14, 1), key="confirmPlots"), sg.Push()]
         ]
 
-        super().__init__(self._title, self._layout)
-        # self._window.DisableClose=True
+        super().__init__(self._title, self._layout, True)
 
         ## Key variables
         # Checkboxes
@@ -115,7 +114,7 @@ class PlotData(Window):
         self._clearData = self._window["clearData"]
         self._dataList = self._window["dataList"]
         self._deleteData = self._window["deleteData"]
-        self._cancelPlots = self._window["cancelPlots"]
+        self._back = self._window["back"]
         self._confirmPlots = self._window["confirmPlots"]
 
     def read(self):
@@ -132,39 +131,46 @@ class PlotData(Window):
                 self._window.close()
                 break
 
-            elif event == "cancelPlots":
-
+            # Back pressed
+            elif event == "back":
                 self._window.close()
                 break
 
             # Prev pressed
-            elif event == "prevButton":
-                self._currentPlotIndex -= 1
-                self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
-                self._updateDataList()
+            elif event == "prevButton" or event == "Left:37":
+                if self._currentPlotIndex != 0:
+                    self._currentPlotIndex -= 1
+                    self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+                    self._updateDataList()
 
             # Next pressed
-            elif event == "nextButton":
-                self._currentPlotIndex += 1
-                self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
-                self._updateDataList()
+            elif event == "nextButton" or event == "Right:39":
+                if self._currentPlotIndex != len(self._plots) - 1:
+                    self._currentPlotIndex += 1
+                    self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+                    self._updateDataList()
 
             # Save Data pressed
             elif event == "saveData":
-                dataSet = self._makeDataSet()
-                self._callOffData.writeDataSet(self._title,
-                    self._plots[self._currentPlotIndex], dataSet)
-                self._updateDataList()
-                # self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
-                #     self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
+                try:
+                    selection = values["dataList"][0]
+                except:
+                    selection = None
+                if selection == None:
+                    dataSet = self._makeDataSet()
+                    self._callOffData.writeDataSet(self._title,
+                        self._plots[self._currentPlotIndex], dataSet)
+                    self._updateDataList()
+                else:
+                    index = self._dataList.Values.index(selection)
+                    self._callOffData.updateDataSet(self._title, self._plots[self._currentPlotIndex], index, self._makeDataSet())
+                    self._updateDataList()
 
             # Delete Data pressed
             elif event == "deleteData":
                 index = self._dataList.Values.index(values["dataList"][0])
                 self._callOffData.deleteDataSet(self._title, self._plots[self._currentPlotIndex], index)
                 self._updateDataList()
-                # self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
-                #     self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
 
             # Confirm pressed
             elif event == "confirmPlots":
@@ -175,26 +181,73 @@ class PlotData(Window):
                 print(emptyList)
                 if emptyList == []:
                     self._window.close()
-                    break
+                    return True
                 else:
                     warning = Warning(emptyList)
+                    self._window.disable()
                     userResponse = warning.read()
+                    self._window.enable()
+                    self._window.bring_to_front()
                     if userResponse == "cancel":
                         pass
                     elif userResponse == "continue":
                         self._callOffData.trimPlots(self._title,
                             emptyList)
                         self._window.close()
-                        break
+                        return True
 
+            # Clear Checkboxes pressed
             elif event == "clearBoxes":
-                for box in self._checkboxes:
-                    box.update(False)
+                self._clearBoxesFunc()
 
+            # Clear Data pressed
             elif event == "clearData":
-                self._date.update("")
-                self._time.update("")
-                self._notes.update("")
+                self._clearDataFunc()
+
+            # Data set selected
+            elif event == "dataList":
+                try:
+                    index = self._dataList.Values.index(values["dataList"][0])
+                    readDataSet = self._callOffData.readDataSet(self._title, self._plots[self._currentPlotIndex], index)
+                    self._populateFields(readDataSet)
+                except:
+                    pass
+
+            elif event == "1":
+                self._invertBox(self._gutter)
+
+            elif event == "2":
+                self._invertBox(self._downpipe)
+
+            elif event == "3":
+                self._invertBox(self._gasKit)
+
+            elif event == "4":
+                self._invertBox(self._1stFixKit)
+
+            elif event == "5":
+                self._invertBox(self._soilsKit)
+
+            elif event == "6":
+                self._invertBox(self._midFix)
+
+            elif event == "7":
+                self._invertBox(self._heatAndBath)
+                    
+            elif event == "8":
+                self._invertBox(self._fix2)
+
+            elif event == "9":
+                self._invertBox(self._sani)
+
+            elif event == "0":
+                self._invertBox(self._fix3)
+
+            elif event == "-":
+                self._invertBox(self._finals)
+
+            elif event == "=":
+                self._invertBox(self._fix4)
 
             self._toggleDisabled(event, values)
 
@@ -257,3 +310,31 @@ class PlotData(Window):
         "Updates the data list"
         self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
                 self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
+
+    def _clearBoxesFunc(self):
+        for box in self._checkboxes:
+            box.update(False)
+
+    def _clearDataFunc(self):
+        self._date.update("")
+        self._time.update("")
+        self._notes.update("")
+
+    def _populateFields(self, dataSet):
+        "Populates the checkboxes and fields with data from selected data set"
+        self._clearBoxesFunc()
+        self._clearDataFunc()
+        self._date.update(dataSet[4])
+        self._time.update(dataSet[5])
+        self._notes.update(dataSet[7])
+        indices = (index for index, item in
+            enumerate(list(map(lambda stage : stage in dataSet[3], self._stages))) if item == True)
+        for index in indices:
+            self._checkboxes[index].update(True)
+
+    def _invertBox(self, checkbox):
+        "Inverts the current state of a checkbox"
+        if checkbox.get() == False:
+            checkbox.update(True)
+        else:
+            checkbox.update(False)

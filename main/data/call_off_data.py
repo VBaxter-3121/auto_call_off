@@ -22,7 +22,11 @@ class CallOffData():
 
     def groupEmpty(self, groupName):
         "Returns True if specified key has a value of {} (used by home)"
-        return self._callOffDict[groupName] == {}
+        if self._callOffDict[groupName] == {}:
+            return True
+        else:
+            return True in list(map(lambda plot : self._callOffDict[groupName][plot] == [],
+                self._callOffDict[groupName].keys()))
 
     def writeGroup(self, groupName):
         "Updates the dictionary with a new key (used by home)"
@@ -68,6 +72,10 @@ class CallOffData():
         (used by plot data and group data)"""
         return self._callOffDict[groupName][plotNumber]
 
+    def readDataSet(self, groupName, plotNumber, index):
+        "Returns a single data set (used by plot data)"
+        return self._callOffDict[groupName][plotNumber][index]
+
     def writeDataSet(self, groupName, plotNumber, dataSet):
         "Saves data from plot data window to callOffDict (used by plot data)"
         self._callOffDict[groupName][plotNumber].append(dataSet)
@@ -75,6 +83,10 @@ class CallOffData():
     def deleteDataSet(self, groupName, plotNumber, index):
         "Deletes a data set from the dictionary (used by plot data)"
         self._callOffDict[groupName][plotNumber].pop(index)
+
+    def updateDataSet(self, groupName, plotNumber, index, dataSet):
+        "Updates a data set in the dictionary"
+        self._callOffDict[groupName][plotNumber][index] = dataSet
 
     def _printDict(self):
         "For debugging"

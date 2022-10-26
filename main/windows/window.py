@@ -9,7 +9,7 @@ class Window:
     _layout: The widgets that make up the window's layout
     """
 
-    def __init__(self, title, layout):
+    def __init__(self, title, layout, returnKeyboard=False):
         """Constructs an instance of the 'Window' class
         
         Parameters:
@@ -18,7 +18,10 @@ class Window:
         """
         self._title = title
         self._layout = layout
-        self._window = sg.Window(self._title, self._layout, finalize=True)
+        if not returnKeyboard:
+            self._window = sg.Window(self._title, self._layout, finalize=True)
+        else:
+            self._window = sg.Window(self._title, self._layout, return_keyboard_events=True, finalize=True)
 
     def getWindow(self):
         "Returns the window attribute"

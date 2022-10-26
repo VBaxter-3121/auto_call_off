@@ -31,12 +31,12 @@ class GroupData(Window):
             [sg.Button("Set Plots", size=(8, 1), disabled=True, key="setPlots"), sg.Push(),
                 sg.Button("Delete", size=(8, 1), disabled=True, key="deletePlot"), sg.Push(),
                 sg.Button("Delete All", size=(8, 1), disabled=True, key="deleteAll")],
-            [sg.Button("Cancel", size=(11, 1), key="cancelGroup"), sg.Push(),
+            [sg.Button("Back", size=(11, 1), key="backGroup"), sg.Push(),
                 sg.Button("Confirm", size=(11, 1), disabled=True, key="confirmGroup")]
         ]
 
         super().__init__(self._title, self._layout)
-        # self._window.DisableClose=True
+        self._window.DisableClose=True
 
         ## Key variables
         self._plotInput = self._window["plotInput"]
@@ -44,11 +44,12 @@ class GroupData(Window):
         self._setPlots = self._window["setPlots"]
         self._deletePlot = self._window["deletePlot"]
         self._deleteAll = self._window["deleteAll"]
-        self._cancelGroup = self._window["cancelGroup"]
+        self._backGroup = self._window["backGroup"]
         self._confirmGroup = self._window["confirmGroup"]
 
         # Allow the enter key to add a plot number to the list
         self._plotInput.bind("<Return>", "Add")
+        self._toggleDisabled(None, None)
 
     def read(self):
         "Handles events and values related to the group data window"
@@ -59,7 +60,7 @@ class GroupData(Window):
             print(event)
 
             # Window closed
-            if event == sg.WIN_CLOSED or event == "cancelGroup":
+            if event == sg.WIN_CLOSED or event == "backGroup":
                 break
 
             # Plot number added
@@ -74,14 +75,13 @@ class GroupData(Window):
             # Set Plots pressed
             elif event == "setPlots":
                 plotData = PlotData(self._title, self._plotList.Values, self._callOffData)
-                plotData.read()
-                newPlots = self._callOffData.readPlots(self._title)
-                if ([] not in list(map(lambda plot :
-                    self._callOffData.readDataSets(self._title, plot), newPlots))):
+                self._window.disable()
+                closeSelf = plotData.read()
+                self._window.enable()
+                self._window.bring_to_front()
+                if closeSelf:
                     self._window.close()
                     break
-                else:
-                    pass
 
             # Delete Plot pressed
             elif event == "deletePlot":
