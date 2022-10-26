@@ -1,4 +1,3 @@
-from faulthandler import disable
 import PySimpleGUI as sg
 from windows.window import Window
 from windows.plot_data import PlotData
@@ -65,12 +64,6 @@ class GroupData(Window):
 
             # Plot number added
             elif event == "plotInputAdd":
-                # if values["plotInput"] not in self._plotList.Values:
-                #     # Add new plot number to list
-                #     self._plotList.Values.append(values["plotInput"])
-                #     self._plotList.update(values=self._plotList.Values)
-                #     # Empty plot number input box
-                #     self._plotInput.update("")
                 if values["plotInput"] not in self._callOffData.readPlots(self._title):
                     # Add new plot number to list
                     self._callOffData.writePlot(self._title, values["plotInput"])
@@ -82,17 +75,21 @@ class GroupData(Window):
             elif event == "setPlots":
                 plotData = PlotData(self._title, self._plotList.Values, self._callOffData)
                 plotData.read()
+                newPlots = self._callOffData.readPlots(self._title)
+                if ([] not in list(map(lambda plot :
+                    self._callOffData.readDataSets(self._title, plot), newPlots))):
+                    self._window.close()
+                    break
+                else:
+                    pass
 
             # Delete Plot pressed
             elif event == "deletePlot":
-                # self._plotList.Values.remove(values["plotList"][0])
-                # self._plotList.update(values=self._plotList.Values)
                 self._callOffData.deletePlot(self._title, values["plotList"][0])
                 self._plotList.update(values=self._callOffData.readPlots(self._title))
 
             # Delete All pressed
             elif event == "deleteAll":
-                # self._plotList.update(values=[])
                 for plot in self._plotList.Values:
                     self._callOffData.deletePlot(self._title, plot)
                     self._plotList.update(values=self._callOffData.readPlots(self._title))
@@ -103,22 +100,26 @@ class GroupData(Window):
 
     def _toggleDisabled(self, event, values):
         "Checks if each button should be disabled or not"
+
         # Set Plots
-        if self._callOffData.readPlots(self._title) != {}:
+        if self._callOffData.readPlots(self._title) != []:
             self._setPlots.update(disabled=False)
         else:
             self._setPlots.update(disabled=True)
 
-        # Delete toggle is not working correctly
         # Delete Plot
-        if (self._callOffData.readPlots(self._title) != {} and
+        if (self._callOffData.readPlots(self._title) != [] and
             event != "deletePlot" and event != "deleteAll"):
-            self._deletePlot.update(disabled=False)
+            try:
+                if values["plotList"][0] != []:
+                    self._deletePlot.update(disabled=False)
+            except:
+                pass
         else:
             self._deletePlot.update(disabled=True)
 
         # Delete All
-        if (self._callOffData.readPlots(self._title) != {} and
+        if (self._callOffData.readPlots(self._title) != [] and
             event != "deleteAll"):
             self._deleteAll.update(disabled=False)
         else:

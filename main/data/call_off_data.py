@@ -60,15 +60,21 @@ class CallOffData():
     def trimPlots(self, groupName, plotNumbers):
         """Removes empty plots from dictionary if user confirms
         plot data without filling some plots (used by plot data)"""
+        for plot in plotNumbers:
+            self._callOffDict[groupName].pop(plot)
 
-    def readDataSet(self, groupName, plotNumber, dataSet):
-        """Populates the plot data window with data from callOffDict
-        (used by plot data)"""
+    def readDataSets(self, groupName, plotNumber):
+        """Returns a list of data sets for the specified plot
+        (used by plot data and group data)"""
         return self._callOffDict[groupName][plotNumber]
 
     def writeDataSet(self, groupName, plotNumber, dataSet):
         "Saves data from plot data window to callOffDict (used by plot data)"
         self._callOffDict[groupName][plotNumber].append(dataSet)
+
+    def deleteDataSet(self, groupName, plotNumber, index):
+        "Deletes a data set from the dictionary (used by plot data)"
+        self._callOffDict[groupName][plotNumber].pop(index)
 
     def _printDict(self):
         "For debugging"

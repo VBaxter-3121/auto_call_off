@@ -99,7 +99,8 @@ class Home(Window):
             self._addGroup.update(disabled=True)
 
         # Delete Group/Edit Group
-        if values["groupList"] != [] and event != "deleteGroup":
+        if (values["groupList"] != [] and event != "deleteGroup" and
+            event != "editGroup"):
             self._deleteGroup.update(disabled=False)
             self._editGroup.update(disabled=False)
         else:

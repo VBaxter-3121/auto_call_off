@@ -1,5 +1,7 @@
+from tokenize import group
 import PySimpleGUI as sg
 from windows.window import Window
+from windows.warning import Warning
 from data.job_details import jobDetails
 
 class PlotData(Window):
@@ -69,7 +71,7 @@ class PlotData(Window):
                     [sg.In(size=(19, 2), key="notes")],
                     [sg.Button("Save Data", size=(8, 1), disabled=True, key="saveData"),
                         sg.Button("Clear Data", size=(8, 1), key="clearData")],
-                    [sg.Listbox(values=[], size=(19, 11), key="dataList")],
+                    [sg.Listbox(values=[], size=(19, 11), enable_events=True, key="dataList")],
                     [sg.Button("Delete", size=(18, 1), disabled=True, key="deleteData")]
             ])
             ],
@@ -118,6 +120,7 @@ class PlotData(Window):
 
     def read(self):
         "Handles events and values related to the plot data window"
+        self._updateDataList()
         while True:
             event, values = self._window.read()
 
@@ -125,7 +128,12 @@ class PlotData(Window):
             print(event)
 
             # Window closed
-            if event == sg.WIN_CLOSED or event == "cancelPlots":
+            if event == sg.WIN_CLOSED:
+                self._window.close()
+                break
+
+            elif event == "cancelPlots":
+
                 self._window.close()
                 break
 
@@ -133,25 +141,60 @@ class PlotData(Window):
             elif event == "prevButton":
                 self._currentPlotIndex -= 1
                 self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+                self._updateDataList()
 
             # Next pressed
             elif event == "nextButton":
                 self._currentPlotIndex += 1
                 self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
+                self._updateDataList()
 
             # Save Data pressed
             elif event == "saveData":
                 dataSet = self._makeDataSet()
                 self._callOffData.writeDataSet(self._title,
                     self._plots[self._currentPlotIndex], dataSet)
-                self._dataList.update(values=self._callOffData.readDataSet(self._title,
-                    self._plots[self._currentPlotIndex], dataSet))
+                self._updateDataList()
+                # self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
+                #     self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
 
             # Delete Data pressed
             elif event == "deleteData":
-                # self._dataList.Values.remove(values["dataList"][0])
-                # self._dataList.update(self._dataList.Values)
-                pass
+                index = self._dataList.Values.index(values["dataList"][0])
+                self._callOffData.deleteDataSet(self._title, self._plots[self._currentPlotIndex], index)
+                self._updateDataList()
+                # self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
+                #     self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
+
+            # Confirm pressed
+            elif event == "confirmPlots":
+                indices = (index for index, item in
+                    enumerate(list(map(
+                        lambda plot : self._callOffData.readDataSets(self._title, plot), self._plots))) if item == [])
+                emptyList = list(map(lambda index : self._plots[index], indices))
+                print(emptyList)
+                if emptyList == []:
+                    self._window.close()
+                    break
+                else:
+                    warning = Warning(emptyList)
+                    userResponse = warning.read()
+                    if userResponse == "cancel":
+                        pass
+                    elif userResponse == "continue":
+                        self._callOffData.trimPlots(self._title,
+                            emptyList)
+                        self._window.close()
+                        break
+
+            elif event == "clearBoxes":
+                for box in self._checkboxes:
+                    box.update(False)
+
+            elif event == "clearData":
+                self._date.update("")
+                self._time.update("")
+                self._notes.update("")
 
             self._toggleDisabled(event, values)
 
@@ -180,18 +223,15 @@ class PlotData(Window):
             self._saveData.update(disabled=True)
         
         # Delete Data
-        if values["dataList"] != [] and event != "deleteData":
-            self._deleteData.update(disabled=False)
+        if (self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]) != [] and
+            event != "deleteData"):
+            try:
+                if values["dataList"][0] != []:
+                    self._deleteData.update(disabled=False)
+            except:
+                pass
         else:
             self._deleteData.update(disabled=True)
-
-    def _getStages(self):
-        "Returns a list of requried stages for call off"
-        # Check the below link for explanation (answer by Tomerikoo)
-        # https://stackoverflow.com/questions/6294179/how-to-find-all-occurrences-of-an-element-in-a-list
-        indices = (index for index, item in
-            enumerate(list(map(lambda checkbox : checkbox.get(), self._checkboxes))) if item == True)
-        return list(map(lambda indices : self._stages[indices], indices))
 
     def _makeDataSet(self):
         "Returns a list of values used for the call off"
@@ -204,3 +244,16 @@ class PlotData(Window):
         manager = jobDetails[developer][site][1]
         notes = self._notes.get()
         return [developer, site, plotNumber, requiredStages, date, time, manager, notes]
+        
+    def _getStages(self):
+        "Returns a list of requried stages for call off"
+        # Check the below link for explanation (answer by Tomerikoo)
+        # https://stackoverflow.com/questions/6294179/how-to-find-all-occurrences-of-an-element-in-a-list
+        indices = (index for index, item in
+            enumerate(list(map(lambda checkbox : checkbox.get(), self._checkboxes))) if item == True)
+        return list(map(lambda index : self._stages[index], indices))
+
+    def _updateDataList(self):
+        "Updates the data list"
+        self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
+                self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))

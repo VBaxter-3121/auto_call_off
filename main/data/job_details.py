@@ -18,7 +18,8 @@ jobDetails = {
 "Sherfield on Loddon": ["717-", "Andy Knight"],
 "Blandford Ph1": ["713-", "Andy Knight"],
 "Blandford Ph2": ["715-", "Andy Knight"],
-"Blandford Ph3": ["716-", "Andy Knight"]
+"Blandford Ph3": ["716-", "Andy Knight"],
+"Sturminster": ["719-", "Andy Knight"]
 },
 "Bloor Homes": {
 "Boorley Green": ["736-", "Ben Adams"]
