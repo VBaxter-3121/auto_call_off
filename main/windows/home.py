@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
+from call_off.call_off import CallOff
 from windows.window import Window
 from windows.group_data import GroupData
 from data.job_details import jobDetails
+
 
 class Home(Window):
     """The home window is the first window that the user will see
@@ -33,6 +35,7 @@ class Home(Window):
         ]
 
         super().__init__(self._title, self._layout)
+        self._window.bring_to_front()
 
         ## Key variables
         self._developer = self._window["developer"]
@@ -51,11 +54,11 @@ class Home(Window):
             event, values = self._window.read()
 
             # For debugging
-            print(event)
+            # print(event)
 
             # Window closed
             if event == sg.WIN_CLOSED:
-                break
+                return False
             
             # Developer selected
             elif event == "developer":
@@ -86,6 +89,13 @@ class Home(Window):
                 self._window.bring_to_front()
                 self._refreshList()
 
+            elif event == "startCallOffs":
+                callOffDict = self._callOffData.readDict()
+                callOff = CallOff(callOffDict)
+                self._window.close()
+                callOff.execute()
+                break
+
             self._toggleDisabled(event, values)
     
     def _toggleDisabled(self, event, values):
@@ -108,7 +118,15 @@ class Home(Window):
             self._editGroup.update(disabled=True)
 
         # Start Call Offs
-        pass
+        ready = True
+        for groupName in self._groupList.Values:
+            if groupName[-1] == "*":
+                ready = False
+                break
+        if ready:
+            self._startCallOffs.update(disabled=False)
+        else:
+            self._startCallOffs.update(disabled=True)
 
     def _refreshList(self):
         "Refreshed the groups list"

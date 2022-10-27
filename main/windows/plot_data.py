@@ -124,7 +124,7 @@ class PlotData(Window):
             event, values = self._window.read()
 
             # For debugging
-            print(event)
+            # print(event)
 
             # Window closed
             if event == sg.WIN_CLOSED:
@@ -296,7 +296,8 @@ class PlotData(Window):
         time = self._time.get()
         manager = jobDetails[developer][site][1]
         notes = self._notes.get()
-        return [developer, site, plotNumber, requiredStages, date, time, manager, notes]
+        siteNumber = jobDetails[developer][site][0]
+        return [developer, site, plotNumber, requiredStages, date, time, manager, notes, siteNumber]
         
     def _getStages(self):
         "Returns a list of requried stages for call off"

@@ -57,7 +57,7 @@ class GroupData(Window):
             event, values = self._window.read()
 
             # For dubugging
-            print(event)
+            # print(event)
 
             # Window closed
             if event == sg.WIN_CLOSED or event == "backGroup":

@@ -88,8 +88,12 @@ class CallOffData():
         "Updates a data set in the dictionary"
         self._callOffDict[groupName][plotNumber][index] = dataSet
 
-    def _printDict(self):
-        "For debugging"
-        ###
-        print(self._callOffDict)
-        ###
+    def readDict(self):
+        "Returns the entire dictionary"
+        return self._callOffDict
+
+    # def _printDict(self):
+    #     "For debugging"
+    #     ###
+    #     print(self._callOffDict)
+    #     ###

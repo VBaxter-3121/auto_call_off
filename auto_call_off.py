@@ -668,6 +668,7 @@ def read(stagesRequired, plot):
             else:
                 ordersPerStage[currentCode] = 1
             print(f"Plot {plot}: Found 'HEATING' order ({currentPO})")
+
         elif currentCode == "BATH" and "HEATING & BATH" in stagesRequired:
             requiredOrders[currentPO] = [currentCode, currentSupplier, currentNotes]
             if currentCode in ordersPerStage:
@@ -675,6 +676,7 @@ def read(stagesRequired, plot):
             else:
                 ordersPerStage[currentCode] = 1
             print(f"Plot {plot}: Found 'BATH' order ({currentPO})")
+
         elif currentCode == "2ND FIX KIT" and "HEATING & BATH" in stagesRequired:
             requiredOrders[currentPO] = [currentCode, currentSupplier, currentNotes]
             if currentCode in ordersPerStage:
@@ -682,6 +684,7 @@ def read(stagesRequired, plot):
             else:
                 ordersPerStage[currentCode] = 1
             print(f"Plot {plot}: Found '2ND FIX KIT' order ({currentPO})")
+
         elif currentCode == "2ND FIX KIT" and "SANI" in stagesRequired:
             requiredOrders[currentPO] = [currentCode, currentSupplier, currentNotes]
             if currentCode in ordersPerStage:
@@ -689,6 +692,7 @@ def read(stagesRequired, plot):
             else:
                 ordersPerStage[currentCode] = 1
             print(f"Plot {plot}: Found '2ND FIX KIT' order ({currentPO})")
+            
         elif currentCode == "2ND FIX FITTINGS" and "FIX 2" in stagesRequired:
             requiredOrders[currentPO] = [currentCode, currentSupplier, currentNotes]
             if currentCode in ordersPerStage:
