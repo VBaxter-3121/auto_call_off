@@ -59,7 +59,6 @@ class CallOffData():
         """Removes the specified plot from the dictionary
         (used by group data and plot data)"""
         self._callOffDict[groupName].pop(plotNumber)
-        self._printDict()
 
     def trimPlots(self, groupName, plotNumbers):
         """Removes empty plots from dictionary if user confirms

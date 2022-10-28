@@ -95,7 +95,7 @@ class FilterRecords:
         # Check if any records were found
         time.sleep(0.5)
         if pag.locateOnScreen(self._empty) != None:
-            print(f"No records found for the given filter ({jobNumber}, {str(phaseNumbers)})")
+            print(f"No records found for the following filter: {jobNumber}, {str(phaseNumbers)}")
             return False
         else:
             return True

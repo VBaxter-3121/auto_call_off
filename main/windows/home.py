@@ -23,9 +23,9 @@ class Home(Window):
         self._title = "Auto Call Off"
         self._layout = [
             [sg.Text("Developer:")],
-            [sg.Combo(values=[], size=(40, 1), enable_events=True, key="developer")],
+            [sg.Combo(values=[], size=(40, 1), enable_events=True, readonly=True, key="developer")],
             [sg.Text("Site:")],
-            [sg.Combo(values=[], size=(40, 1), enable_events=True, key="site")],
+            [sg.Combo(values=[], size=(40, 1), enable_events=True, readonly=True, key="site")],
             [sg.Text("Groups:")],
             [sg.Listbox(values=[], size=(40, 10), enable_events=True, key="groupList")],
             [sg.Button("Add Group", size=(13, 1), disabled=True, key="addGroup"), sg.Push(),

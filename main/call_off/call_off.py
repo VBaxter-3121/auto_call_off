@@ -2,6 +2,7 @@ from pydoc import describe
 from call_off.filter_records import FilterRecords
 from call_off.read_records import ReadRecords
 from call_off.fill_sheet import FillSheet
+from data.job_details import jobDetails
 from data.phase_details import phaseDetails
 
 class CallOff():
@@ -16,8 +17,6 @@ class CallOff():
         self._recognisedNotes = ["All delivery drivers must report to the site team on arrival, \r\nAll delivery drivers must wear High Viz Vest, Hard Hat, Safety foot wear and gloves.",
         ""]
 
-        self._output = []
-
     def execute(self):
         ""
         for groupName in self._data:
@@ -30,9 +29,14 @@ class CallOff():
                         self._constructOutput(requiredPoDict, dataSet)
                         suppliers = self._groupBySupplier(requiredPoDict)
                         for supplier in suppliers:
+                            fileName = self._getFileName(requiredPoDict, suppliers[supplier])
                             sheetData = dataSet
                             sheetData[3] = ", ".join(suppliers[supplier])
-                            self._fill.fillSheet(sheetData, "Test")
+                            if sheetData[5] == "":
+                                sheetData[5] = " "
+                            if sheetData[7] == "":
+                                sheetData[7] = " "
+                            self._fill.fillSheet(sheetData, fileName)
 
     def _makeJobNumber(self, jobNumber, plotNumber):
         ""
@@ -50,10 +54,10 @@ class CallOff():
     def _constructOutput(self, requiredPoDict, dataSet):
         ""
         for po in requiredPoDict:
-            if po[2] in self._recognisedNotes:
-                print(f"{po} - {dataSet[0]}/{dataSet[1]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]}")
+            if requiredPoDict[po][2] in self._recognisedNotes:
+                print(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]}")
             else:
-                print(f"{po} - {dataSet[0]}/{dataSet[1]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]} (Check notes)")
+                print(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]} (Check notes)")
 
         for stage in dataSet[3]:
             stageFound = False
@@ -81,10 +85,19 @@ class CallOff():
     
     def _groupBySupplier(self, requiredPoDict):
         ""
-        suppliers = dict.fromkeys(map(lambda po : requiredPoDict[po][1], requiredPoDict), [])
-        for po in requiredPoDict.keys():
+        suppliers = dict.fromkeys(map(lambda po : requiredPoDict[po][1], requiredPoDict))
+        for supplier in suppliers:
+            suppliers[supplier] = []
+        for po in requiredPoDict:
             suppliers[requiredPoDict[po][1]].append(po)
         return suppliers
+    
+    def _getFileName(self, requiredPoDict, currentSupplier):
+        ""
+        fileName = []
+        for po in currentSupplier:
+            fileName.append(requiredPoDict[po][0])
+        return ", ".join(fileName)
 
 """
 requiredPoDict = {

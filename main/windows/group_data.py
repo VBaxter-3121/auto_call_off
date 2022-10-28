@@ -67,8 +67,12 @@ class GroupData(Window):
             elif event == "plotInputAdd":
                 if values["plotInput"] not in self._callOffData.readPlots(self._title):
                     # Add new plot number to list
-                    self._callOffData.writePlot(self._title, values["plotInput"])
-                    self._plotList.update(values=self._callOffData.readPlots(self._title))
+                    if len(values["plotInput"]) <= 3:
+                        try:
+                            self._callOffData.writePlot(self._title, str(int(values["plotInput"])))
+                            self._plotList.update(values=self._callOffData.readPlots(self._title))
+                        except:
+                            pass
                     # Empty plot number input box
                     self._plotInput.update("")
 

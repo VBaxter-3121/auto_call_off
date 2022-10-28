@@ -80,6 +80,7 @@ class PlotData(Window):
         ]
 
         super().__init__(self._title, self._layout, True)
+        self._window.DisableClose=True
 
         ## Key variables
         # Checkboxes
@@ -136,15 +137,25 @@ class PlotData(Window):
                 self._window.close()
                 break
 
+            # Esc key pressed
+            elif event == "Escape:27":
+                self._clearBoxes.set_focus(force=True)
+
             # Prev pressed
-            elif event == "prevButton" or event == "Left:37":
+            elif (event == "prevButton" or event == "Left:37" and
+                self._window.find_element_with_focus() != self._date and
+                self._window.find_element_with_focus() != self._time and
+                self._window.find_element_with_focus() != self._notes):
                 if self._currentPlotIndex != 0:
                     self._currentPlotIndex -= 1
                     self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
                     self._updateDataList()
 
             # Next pressed
-            elif event == "nextButton" or event == "Right:39":
+            elif (event == "nextButton" or event == "Right:39" and
+                self._window.find_element_with_focus() != self._date and
+                self._window.find_element_with_focus() != self._time and
+                self._window.find_element_with_focus() != self._notes):
                 if self._currentPlotIndex != len(self._plots) - 1:
                     self._currentPlotIndex += 1
                     self._plotNumber.update(f"Plot {self._plots[self._currentPlotIndex]}")
@@ -178,7 +189,6 @@ class PlotData(Window):
                     enumerate(list(map(
                         lambda plot : self._callOffData.readDataSets(self._title, plot), self._plots))) if item == [])
                 emptyList = list(map(lambda index : self._plots[index], indices))
-                print(emptyList)
                 if emptyList == []:
                     self._window.close()
                     return True
@@ -309,8 +319,16 @@ class PlotData(Window):
 
     def _updateDataList(self):
         "Updates the data list"
-        self._dataList.update(values=list(map(lambda list : f"{list[3][0]} etc.",
-                self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
+        self._dataList.update(values=list(map(self._nameDataSet,
+            self._callOffData.readDataSets(self._title, self._plots[self._currentPlotIndex]))))
+
+#lambda list : f"{list[3][0]} etc."
+
+    def _nameDataSet(self, stages):
+        if len(stages[3]) == 1:
+            return f"{stages[3][0]}"
+        else:
+            return f"{stages[3][0]} etc."
 
     def _clearBoxesFunc(self):
         for box in self._checkboxes:
@@ -335,7 +353,10 @@ class PlotData(Window):
 
     def _invertBox(self, checkbox):
         "Inverts the current state of a checkbox"
-        if checkbox.get() == False:
-            checkbox.update(True)
-        else:
-            checkbox.update(False)
+        if (self._window.find_element_with_focus() != self._date and
+            self._window.find_element_with_focus() != self._time and
+            self._window.find_element_with_focus() != self._notes):
+            if checkbox.get() == False:
+                checkbox.update(True)
+            else:
+                checkbox.update(False)
