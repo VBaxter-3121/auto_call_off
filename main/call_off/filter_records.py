@@ -11,7 +11,7 @@ class FilterRecords:
         self._default = "main\images\default-job-number.png"
         self._empty = "main\images\empty-list.png"
 
-    def filter(self, jobNumber, phaseNumbers):
+    def filter(self, jobNumber, phaseNumbers, output):
         """Filters Pegasus orders by job number and phase number
         
         Parameters:
@@ -95,7 +95,7 @@ class FilterRecords:
         # Check if any records were found
         time.sleep(0.5)
         if pag.locateOnScreen(self._empty) != None:
-            print(f"No records found for the following filter: {jobNumber}, {str(phaseNumbers)}")
+            output.printLine(f"No records found for the following filter: {jobNumber}, {str(phaseNumbers)}")
             return False
         else:
             return True

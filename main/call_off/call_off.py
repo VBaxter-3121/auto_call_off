@@ -4,6 +4,7 @@ from call_off.read_records import ReadRecords
 from call_off.fill_sheet import FillSheet
 from data.job_details import jobDetails
 from data.phase_details import phaseDetails
+from windows.output import Output
 
 class CallOff():
     ""
@@ -19,14 +20,15 @@ class CallOff():
 
     def execute(self):
         ""
+        output = Output()
         for groupName in self._data:
             for plot in self._data[groupName]:
                 for dataSet in self._data[groupName][plot]:
                     "[developer, site, plotNumber, requiredStages, date, time, manager, notes, siteNumber]"
                     if self._filter.filter(
-                        self._makeJobNumber(dataSet.pop(-1), dataSet[2]), self._getPhaseNumbers(dataSet[3])):
+                        self._makeJobNumber(dataSet.pop(-1), dataSet[2]), self._getPhaseNumbers(dataSet[3]), output):
                         requiredPoDict = self._read.read(dataSet[3])
-                        self._constructOutput(requiredPoDict, dataSet)
+                        self._constructOutput(requiredPoDict, dataSet, output)
                         suppliers = self._groupBySupplier(requiredPoDict)
                         for supplier in suppliers:
                             fileName = self._getFileName(requiredPoDict, suppliers[supplier])
@@ -37,6 +39,9 @@ class CallOff():
                             if sheetData[7] == "":
                                 sheetData[7] = " "
                             self._fill.fillSheet(sheetData, fileName)
+        output._window.bring_to_front()
+        output.read()
+        output._window.close()
 
     def _makeJobNumber(self, jobNumber, plotNumber):
         ""
@@ -51,13 +56,13 @@ class CallOff():
         ""
         return list(dict.fromkeys(list(map(lambda stage : phaseDetails[stage], stages))))
 
-    def _constructOutput(self, requiredPoDict, dataSet):
+    def _constructOutput(self, requiredPoDict, dataSet, output):
         ""
         for po in requiredPoDict:
             if requiredPoDict[po][2] in self._recognisedNotes:
-                print(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]}")
+                output.printLine(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]}")
             else:
-                print(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]} (Check notes)")
+                output.printLine(f"{po} - {jobDetails[dataSet[0]][dataSet[1]][2]}/{dataSet[2]}/{requiredPoDict[po][0].capitalize()} - {dataSet[4]} {dataSet[5]} (Check notes)")
 
         for stage in dataSet[3]:
             stageFound = False
@@ -80,8 +85,8 @@ class CallOff():
                     requiredPoDict[po][0] == "SANI FINALS"):
                     stageFound = True
             if not stageFound:
-                print(f"Error: No orders found for {dataSet[0]}/{dataSet[1]}/{dataSet[2]}/{stage.capitalize()}")
-        print()
+                output.printLine(f"Error: No orders found for {dataSet[0]}/{dataSet[1]}/{dataSet[2]}/{stage.capitalize()}")
+        output.printLine("")
     
     def _groupBySupplier(self, requiredPoDict):
         ""
