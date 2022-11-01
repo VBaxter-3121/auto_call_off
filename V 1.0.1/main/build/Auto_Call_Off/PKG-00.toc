@@ -1,0 +1,70 @@
+('C:\\Users\\vincent.baxter\\OneDrive - K A '
+ 'WAtts\\Documents\\Git\\auto_call_off\\V '
+ '1.0.1\\main\\build\\Auto_Call_Off\\Auto_Call_Off.pkg',
+ {'BINARY': 1,
+  'DATA': 1,
+  'EXECUTABLE': 1,
+  'EXTENSION': 1,
+  'PYMODULE': 1,
+  'PYSOURCE': 1,
+  'PYZ': 0,
+  'SPLASH': 1},
+ [('PYZ-00.pyz',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\PYZ-00.pyz',
+   'PYZ'),
+  ('struct',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\localpycs\\struct.pyc',
+   'PYMODULE'),
+  ('pyimod01_archive',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\localpycs\\pyimod01_archive.pyc',
+   'PYMODULE'),
+  ('pyimod02_importers',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\localpycs\\pyimod02_importers.pyc',
+   'PYMODULE'),
+  ('pyimod03_ctypes',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V '
+   '1.0.1\\main\\build\\Auto_Call_Off\\localpycs\\pyimod04_pywin32.pyc',
+   'PYMODULE'),
+  ('pyiboot01_bootstrap',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
+   'PYSOURCE'),
+  ('pyi_rth_subprocess',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_subprocess.py',
+   'PYSOURCE'),
+  ('pyi_rth_inspect',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
+   'PYSOURCE'),
+  ('pyi_rth_pkgutil',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
+   'PYSOURCE'),
+  ('pyi_rth_multiprocessing',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
+   'PYSOURCE'),
+  ('pyi_rth__tkinter',
+   'C:\\Users\\vincent.baxter\\AppData\\Local\\Programs\\Python\\Python310\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth__tkinter.py',
+   'PYSOURCE'),
+  ('__main__',
+   'C:\\Users\\vincent.baxter\\OneDrive - K A '
+   'WAtts\\Documents\\Git\\auto_call_off\\V 1.0.1\\main\\__main__.py',
+   'PYSOURCE')],
+ True,
+ False,
+ False,
+ [],
+ None,
+ None,
+ None)

@@ -1,0 +1,1 @@
+pyinstaller --add-data images\default-job-number.png;main\images --add-data images\empty-list.png;main\images --add-data images\win4.png;main\images --windowed --name Auto_Call_Off __main__.py
