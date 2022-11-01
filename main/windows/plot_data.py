@@ -172,10 +172,12 @@ class PlotData(Window):
                     self._callOffData.writeDataSet(self._title,
                         self._plots[self._currentPlotIndex], dataSet)
                     self._updateDataList()
+                    self._clearBoxes.set_focus(force=True)
                 else:
                     index = self._dataList.Values.index(selection)
                     self._callOffData.updateDataSet(self._title, self._plots[self._currentPlotIndex], index, self._makeDataSet())
                     self._updateDataList()
+                    self._clearBoxes.set_focus(force=True)
 
             # Delete Data pressed
             elif event == "deleteData":
