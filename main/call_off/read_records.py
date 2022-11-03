@@ -14,8 +14,19 @@ class ReadRecords():
     def read(self, requiredStages):
         ""
         prevPo = ""
-        # alternateStages = self._getAlternateStages(requiredStages)
-        alternateStagesFound = []
+        alternateStages = []
+        if "MID FIX" in requiredStages:
+            alternateStages.append("SHOWER TRAY")
+        if "HEATING & BATH" in requiredStages:
+            alternateStages.append("HEATING")
+            alternateStages.append("BATH")
+            alternateStages.append("2ND FIX KIT")
+        if "FIX 2" in requiredStages:
+            alternateStages.append("2ND FIX FITTINGS")
+        if "FINALS" in requiredStages:
+            alternateStages.append("HEATING FINALS")
+            alternateStages.append("SANI FINALS")
+
         requiredPoDict = {}
 
         headerNotes = self._findHeaderNotes()
@@ -32,7 +43,7 @@ class ReadRecords():
             self._selectNextCell()
             self._poRequired(requiredStages,
                 [currentPo, currentStage, currentSupplier, currentNotes],
-                requiredPoDict)
+                requiredPoDict, alternateStages)
             prevPo = currentPo
         
         return requiredPoDict
@@ -129,8 +140,11 @@ class ReadRecords():
         pag.hotkey("ctrl", "c")
         time.sleep(0.1)
 
-    def _poRequired(self, requiredStages, currentPoDetails, requiredPoDict):
+    def _poRequired(self, requiredStages, currentPoDetails, requiredPoDict, alternateStages):
         ""
         if currentPoDetails[1] in requiredStages:
+            requiredPoDict[currentPoDetails[0]] = [currentPoDetails[1],
+                currentPoDetails[2], currentPoDetails[3]]
+        elif currentPoDetails[1] in alternateStages:
             requiredPoDict[currentPoDetails[0]] = [currentPoDetails[1],
                 currentPoDetails[2], currentPoDetails[3]]
