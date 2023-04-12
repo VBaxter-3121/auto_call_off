@@ -2,7 +2,7 @@ from pydoc import describe
 from call_off.filter_records import FilterRecords
 from call_off.read_records import ReadRecords
 from call_off.fill_sheet import FillSheet
-from data.job_details import jobDetails
+from main.data.job_details import jobDetails
 from data.phase_details import phaseDetails
 from windows.output import Output
 

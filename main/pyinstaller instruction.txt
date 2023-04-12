@@ -1,1 +1,3 @@
-pyinstaller --add-data images\default-job-number.png;main\images --add-data images\empty-list.png;main\images --add-data images\win4.png;main\images --windowed --name Auto_Call_Off __main__.py
+pyinstaller --add-data images\default-job-number.png;main\images --add-data images\empty-list.png;main\images --add-data images\win1.png;main\images --add-data images\win2.png;main\images --add-data images\win3.png;main\images --add-data images\win4.png;main\images --add-data images\win5.png;main\images --add-data images\win6.png;main\images --add-data images\pegasus-background.png;main\images --add-data images\no-windows.png;main\images --add-data images\view-change.png;main\images --add-data data\job_details.py;main/data --windowed --name Auto_Call_Off __main__.py
+
+pyinstaller --add-data emails.txt;main\list --windowed --name Email_Filler autoEmail.py

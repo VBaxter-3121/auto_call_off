@@ -2,7 +2,7 @@ import pyautogui as pag
 import pyperclip as pyp
 import time
 from call_off.window_selector import WindowSelector
-from data.job_details import jobDetails
+from main.data.job_details import jobDetails
 
 class FillSheet():
 
@@ -59,10 +59,10 @@ class FillSheet():
         # Return to the file name input box
         pag.hotkey("alt", "n")
         # Enter the name of the file
-        if fileName != "1ST FIX KIT":
-            pag.write(f"{jobDetails[sheetData[0]][sheetData[1]][2]} Plot {sheetData[2]} {fileName.title()} Call off sheet.pdf")
+        if fileName[0].isnumeric():
+            pag.write(f"{jobDetails[sheetData[0]][sheetData[1]][2]} Plot {sheetData[2]} {fileName.lower()} Call off sheet.pdf")
         else:
-            pag.write(f"{jobDetails[sheetData[0]][sheetData[1]][2]} Plot {sheetData[2]} 1st Fix Kit Call of sheet.pdf")
+            pag.write(f"{jobDetails[sheetData[0]][sheetData[1]][2]} Plot {sheetData[2]} {fileName.title()} Call off sheet.pdf")
         # Save
         pag.press("enter")
 

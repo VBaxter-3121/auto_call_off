@@ -1,6 +1,3 @@
-from tokenize import group
-
-
 class CallOffData():
     """Contains a dictionary that holds all the data for
     current call offs. Certain parts of this dictionary

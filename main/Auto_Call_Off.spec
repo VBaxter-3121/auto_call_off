@@ -8,7 +8,7 @@ a = Analysis(
     ['__main__.py'],
     pathex=[],
     binaries=[],
-    datas=[('images\\default-job-number.png', 'main\\images'), ('images\\empty-list.png', 'main\\images'), ('images\\win4.png', 'main\\images')],
+    datas=[('images\\default-job-number.png', 'main\\images'), ('images\\empty-list.png', 'main\\images'), ('images\\win1.png', 'main\\images'), ('images\\win2.png', 'main\\images'), ('images\\win3.png', 'main\\images'), ('images\\win4.png', 'main\\images'), ('images\\win5.png', 'main\\images'), ('images\\win6.png', 'main\\images'), ('images\\pegasus-background.png', 'main\\images'), ('images\\no-windows.png', 'main\\images'), ('images\\view-change.png', 'main\\images'), ('data\\job_details.py', 'main/data')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

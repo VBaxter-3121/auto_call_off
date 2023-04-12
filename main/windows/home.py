@@ -2,7 +2,8 @@ import PySimpleGUI as sg
 from call_off.call_off import CallOff
 from windows.window import Window
 from windows.group_data import GroupData
-from data.job_details import jobDetails
+from main.data.job_details import jobDetails
+from windows.setup import setup
 
 
 class Home(Window):
@@ -22,7 +23,7 @@ class Home(Window):
         self._callOffData = data
         self._title = "Auto Call Off"
         self._layout = [
-            [sg.Text("Developer:")],
+            [sg.Text("Developer:"), sg.Push(), sg.Button("Set Up Pegasus", size=(13, 1), disabled=False, key="setUpPegasus")],
             [sg.Combo(values=[], size=(40, 1), enable_events=True, readonly=True, key="developer")],
             [sg.Text("Site:")],
             [sg.Combo(values=[], size=(40, 1), enable_events=True, readonly=True, key="site")],
@@ -88,6 +89,10 @@ class Home(Window):
                 self._window.enable()
                 self._window.bring_to_front()
                 self._refreshList()
+
+            elif event == "setUpPegasus":
+                setup()
+                self._window.bring_to_front()
 
             elif event == "startCallOffs":
                 callOffDict = self._callOffData.readDict()

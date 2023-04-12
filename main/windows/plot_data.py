@@ -2,7 +2,7 @@ from tokenize import group
 import PySimpleGUI as sg
 from windows.window import Window
 from windows.warning import Warning
-from data.job_details import jobDetails
+from main.data.job_details import jobDetails
 
 class PlotData(Window):
     """This window allows the user to enter the call off stages, date,
